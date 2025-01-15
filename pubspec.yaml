@@ -41,6 +41,7 @@ dependencies:
   talker: ^4.6.2
   talker_flutter: ^4.6.2
   talker_riverpod_logger: ^4.6.2
+  firebase_core: ^3.10.0
 
 dev_dependencies:
   flutter_test:
