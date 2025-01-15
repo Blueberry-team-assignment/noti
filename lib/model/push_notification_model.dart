@@ -13,7 +13,6 @@ class PushNotificationModel with _$PushNotificationModel {
     required String flowId,
   }) = _PushNotificationModel;
 
-  // JSON serialization
   factory PushNotificationModel.fromJson(Map<String, dynamic> json) =>
       _$PushNotificationModelFromJson(json);
 }
