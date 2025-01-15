@@ -2,10 +2,9 @@ class FlowHistoryModel {
   final String id;
   final String flowId;
   final String userId;
-  final Duration duration;
   final DateTime startTime;
   final DateTime endTime;
-  final int flowCount;
+  final int flowCount;    // 몇 회차인지
   final bool isSuccess;
   final String notes;
 
@@ -13,7 +12,6 @@ class FlowHistoryModel {
     required this.id,
     required this.flowId,
     required this.userId,
-    required this.duration,
     required this.startTime,
     required this.endTime,
     required this.flowCount,
