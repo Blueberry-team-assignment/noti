@@ -1,8 +1,15 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/firebase_options.dart';
+import 'package:noti_flutter/provider/talker_provider.dart';
 import 'package:noti_flutter/timer_screen.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:talker/talker.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
 
 void main() async {
@@ -10,19 +17,28 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  final analytics = FirebaseAnalytics.instance;
+  analytics.logAppOpen();
+
+  final container = ProviderContainer();
+  final talker = container.read(talkerProvider);
 
   runApp(
     ProviderScope(
       observers: [
-        TalkerRiverpodObserver(),
+        TalkerRiverpodObserver(
+            talker: talker,
+            settings: const TalkerRiverpodLoggerSettings(
+              printProviderDisposed: true,
+            )),
       ],
-      child: const MyApp(),
+      child: const NotiFlutter(),
     ),
   );
 }
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+class NotiFlutter extends ConsumerWidget {
+  const NotiFlutter({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
