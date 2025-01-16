@@ -28,7 +28,11 @@ class StartGuestUserUsecase {
       guest ??= await _authRepository.saveUserToFireStore(
           uid: uid, signUpDto: SignUpDto(isAuthUser: false));
 
-      return guest!;
+      if (guest == null) {
+        throw Exception('Failed to start guest user.');
+      }
+
+      return guest;
     } catch (e) {
       rethrow;
     }
