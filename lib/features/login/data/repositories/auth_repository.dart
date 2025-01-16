@@ -1,33 +1,58 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:noti_flutter/features/login/data/dto/sign_up_dto.dart';
 import 'package:noti_flutter/model/user_model.dart';
 import 'package:noti_flutter/provider/talker_provider.dart';
 import 'package:talker/talker.dart';
 
-abstract class LoginRepository {
-  Future<UserModel> login({
+abstract class AuthRepository {
+  Future<UserModel> logIn({
     required String email,
     required String pw,
   });
+
+  Future<UserModel> signUp({
+    required SignUpDto signUpDto,
+  });
+
+  Future<UserModel> saveUserToFireStore({
+    required String uid,
+    required SignUpDto signUpDto,
+  });
+
+  Future<UserModel> fetchUserFromFireStore({
+    required String uid,
+  });
 }
 
-final loginRepositoryProvider = Provider((ref) {
+final authRepositoryProvider = Provider((ref) {
   final firebaseAuth = FirebaseAuth.instance;
   final talker = ref.read(talkerProvider);
-  return LoginRepositoryImpl(firebaseAuth, talker);
+  return AuthRepositoryImpl(firebaseAuth, talker);
 });
 
-class LoginRepositoryImpl implements LoginRepository {
+class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _firebaseAuth;
   final Talker _talker;
 
-  LoginRepositoryImpl(
+  AuthRepositoryImpl(
     this._firebaseAuth,
     this._talker,
   );
 
   @override
-  Future<UserModel> login({
+  Future<UserModel> saveUserToFireStore({
+    required String uid,
+    required SignUpDto signUpDto,
+  }) async {}
+
+  @override
+  Future<UserModel> fetchUserFromFireStore({
+    required String uid,
+  }) async {}
+
+  @override
+  Future<UserModel> logIn({
     required String email,
     required String pw,
   }) async {
