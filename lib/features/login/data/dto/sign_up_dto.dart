@@ -6,9 +6,10 @@ part 'sign_up_dto.g.dart';
 @freezed
 class SignUpDto with _$SignUpDto {
   factory SignUpDto({
-    required String email,
-    required String pw,
-    required String name,
+    String? email,
+    String? pw,
+    String? name,
+    required bool isAuthUser,
   }) = _SignUpDto;
 
   factory SignUpDto.fromJson(Map<String, dynamic> json) =>
