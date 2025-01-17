@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'flow_history_model.freezed.dart';
-part 'flow_history_model.g.dart';
+part 'generated/flow_history_model.freezed.dart';
+part 'generated/flow_history_model.g.dart';
 
 @freezed
 class FlowHistoryModel with _$FlowHistoryModel {

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:noti_flutter/features/auth/presentation/test_screen.dart';
 import 'package:noti_flutter/firebase_options.dart';
 import 'package:noti_flutter/provider/talker_provider.dart';
 import 'package:noti_flutter/timer_screen.dart';
@@ -47,7 +48,7 @@ class NotiFlutter extends ConsumerWidget {
         colorScheme: colorScheme,
         useMaterial3: true,
       ),
-      home: const TimerScreen(),
+      home: const TestScreen(),
     );
   }
 }
