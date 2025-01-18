@@ -1,16 +1,13 @@
-import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:noti_flutter/features/auth/presentation/test_screen.dart';
 import 'package:noti_flutter/firebase_options.dart';
-import 'package:noti_flutter/provider/talker_provider.dart';
+
+import 'package:noti_flutter/talker.dart';
 import 'package:noti_flutter/timer_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:talker/talker.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
-import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +16,6 @@ void main() async {
   );
   final analytics = FirebaseAnalytics.instance;
   analytics.logAppOpen();
-
-  final container = ProviderContainer();
-  final talker = container.read(talkerProvider);
 
   runApp(
     ProviderScope(
@@ -52,7 +46,7 @@ class NotiFlutter extends ConsumerWidget {
         colorScheme: colorScheme,
         useMaterial3: true,
       ),
-      home: const TimerScreen(),
+      home: const TestScreen(),
     );
   }
 }

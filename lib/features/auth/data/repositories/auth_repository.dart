@@ -1,0 +1,163 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
+import 'package:noti_flutter/model/user_model.dart';
+
+import 'package:noti_flutter/talker.dart';
+import 'package:talker/talker.dart';
+
+abstract class AuthRepository {
+  Future<User?> logIn({
+    required String email,
+    required String pw,
+  });
+
+  Future<User?> signUp({
+    required SignUpDto signUpDto,
+  });
+
+  Future<UserModel?> saveUserToFireStore({
+    required String uid,
+    required SignUpDto signUpDto,
+  });
+
+  Future<UserModel?> fetchUserFromFireStore({
+    required String uid,
+  });
+}
+
+final authRepositoryProvider = Provider((ref) {
+  final firebaseAuth = FirebaseAuth.instance;
+  final firebaseFirestore = FirebaseFirestore.instance;
+
+  return AuthRepositoryImpl(firebaseAuth, firebaseFirestore);
+});
+
+class AuthRepositoryImpl implements AuthRepository {
+  final FirebaseAuth _firebaseAuth;
+  final FirebaseFirestore _firebaseFireStore;
+
+  AuthRepositoryImpl(
+    this._firebaseAuth,
+    this._firebaseFireStore,
+  );
+
+  @override
+  Future<UserModel?> saveUserToFireStore({
+    required String uid,
+    required SignUpDto signUpDto,
+  }) async {
+    try {
+      final newUserRef = _firebaseFireStore.collection('users').doc(uid);
+      await newUserRef.set(signUpDto.toJson()).onError((e, _) => talkerError(
+          "authRepository(saveUserToFireStore)",
+          "유저 정보를 firestore에 저장하는 데 실패했습니다",
+          e ?? {}));
+
+      final user = await newUserRef.get();
+
+      if (!user.exists) return null;
+
+      final data = user.data() as Map<String, dynamic>;
+      data['uid'] = uid;
+      return UserModel.fromJson(data);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<UserModel?> fetchUserFromFireStore({
+    required String uid,
+  }) async {
+    try {
+      final docRef = _firebaseFireStore.collection("users").doc(uid);
+
+      final user = await docRef.get();
+      if (!user.exists) return null;
+
+      final data = user.data() as Map<String, dynamic>;
+      data['uid'] = uid;
+      return UserModel.fromJson(data);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<User?> signUp({
+    required SignUpDto signUpDto,
+  }) async {
+    try {
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: signUpDto.email!,
+        password: signUpDto.pw!,
+      );
+      if (userCredential.user == null) {
+        talkerLog(
+          "authRepository(signUp)",
+          "회원가입한 유저의 정보를 불러 올 수 없습니다",
+        );
+        throw Exception('user not logged in');
+      }
+
+      talkerInfo("authRepository(signUp)",
+          'user signed up : ${userCredential.user?.uid}');
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        talkerError("authRepository(signUp) ", 'The password is too weak.', e);
+        throw Exception('The password is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        talkerError("authRepository(signUp)",
+            'The account already exists for that email.', e);
+        throw Exception('The account already exists for that email.');
+      }
+    } catch (e, stackTrace) {
+      talkerError("authRepository(signUp)",
+          'Unexpected error during signUp : $e', stackTrace);
+      rethrow;
+    }
+    return null;
+  }
+
+  @override
+  Future<User?> logIn({
+    required String email,
+    required String pw,
+  }) async {
+    try {
+      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: pw,
+      );
+
+      final authUser = userCredential.user;
+      if (authUser == null) {
+        talkerLog("authRepository(logIn)", 'Auth user is null after login.');
+        throw FirebaseAuthException(
+          code: 'user-not-found',
+        );
+      }
+
+      talkerInfo("authRepository(logIn)",
+          'user logged in : ${userCredential.user?.uid}');
+      return authUser;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        talkerError(
+            "authRepository(logIn)", 'No user found for that email.', e);
+        throw Exception('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        talkerError("authRepository(logIn)", 'Wrong password provided.', e);
+        throw Exception('Wrong password provided.');
+      }
+      rethrow;
+    } catch (e, stackTrace) {
+      talkerError(
+          "authRepository(logIn)", 'Wrong password provided. : $e', stackTrace);
+      rethrow;
+    }
+  }
+}
