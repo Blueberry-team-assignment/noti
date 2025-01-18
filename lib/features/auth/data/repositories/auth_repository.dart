@@ -3,12 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
 import 'package:noti_flutter/model/user_model.dart';
-
 import 'package:noti_flutter/talker.dart';
-import 'package:talker/talker.dart';
 
 abstract class AuthRepository {
-  Future<User?> logIn({
+  Future<User> logIn({
     required String email,
     required String pw,
   });
@@ -16,6 +14,8 @@ abstract class AuthRepository {
   Future<User?> signUp({
     required SignUpDto signUpDto,
   });
+
+  Future<User?> checkUser();
 
   Future<UserModel?> saveUserToFireStore({
     required String uid,
@@ -57,7 +57,11 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final user = await newUserRef.get();
 
-      if (!user.exists) return null;
+      if (!user.exists) {
+        talkerInfo("authRepository(saveUserToFireStore)",
+            "saved user from firestore not found");
+        return null;
+      }
 
       final data = user.data() as Map<String, dynamic>;
       data['uid'] = uid;
@@ -75,7 +79,11 @@ class AuthRepositoryImpl implements AuthRepository {
       final docRef = _firebaseFireStore.collection("users").doc(uid);
 
       final user = await docRef.get();
-      if (!user.exists) return null;
+      if (!user.exists) {
+        talkerInfo("authRepository(fetchUserToFireStore)",
+            "fetched user from firestore not found");
+        return null;
+      }
 
       final data = user.data() as Map<String, dynamic>;
       data['uid'] = uid;
@@ -123,7 +131,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User?> logIn({
+  Future<User> logIn({
     required String email,
     required String pw,
   }) async {
@@ -159,5 +167,12 @@ class AuthRepositoryImpl implements AuthRepository {
           "authRepository(logIn)", 'Wrong password provided. : $e', stackTrace);
       rethrow;
     }
+  }
+
+  @override
+  Future<User?> checkUser() async {
+    User? user = _firebaseAuth.currentUser;
+    if (user == null) throw Exception('User not found');
+    return user;
   }
 }
