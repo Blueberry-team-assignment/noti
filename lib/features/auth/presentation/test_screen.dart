@@ -4,17 +4,19 @@ import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
 import 'package:noti_flutter/features/auth/data/repositories/auth_repository.dart';
 import 'package:noti_flutter/features/auth/domain/sign_up_usecase.dart';
 import 'package:noti_flutter/features/auth/domain/start_guest_user_usecase.dart';
-import 'package:noti_flutter/provider/talker_provider.dart';
+import 'package:noti_flutter/provider/shared_prefs_provider.dart';
+
+import 'package:noti_flutter/talker.dart';
 
 class TestScreen extends ConsumerWidget {
   const TestScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final talker = ref.read(talkerProvider);
     final authNotifier = ref.read(authRepositoryProvider);
     final signup = ref.watch(signUpUsecaseProvider);
     final startGuestUserUsecase = ref.watch(startGuestUserProvider);
+    final sharedPrefs = ref.read(sharedPrefsProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -40,6 +42,13 @@ class TestScreen extends ConsumerWidget {
               startGuestUserUsecase.execute();
             },
             child: const Text("비회원으로 시작하기")),
+        ElevatedButton(
+            onPressed: () async {
+              await sharedPrefs.setString("uid", "1234");
+              final uid = await sharedPrefs.getString("uid");
+              talkerLog("test screen", "uid : ${uid.toString()}");
+            },
+            child: const Text("uid 저장하기")),
       ],
     );
   }

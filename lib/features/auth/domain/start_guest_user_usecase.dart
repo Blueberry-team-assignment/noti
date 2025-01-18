@@ -1,25 +1,21 @@
 import 'dart:math';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
 import 'package:noti_flutter/features/auth/data/repositories/auth_repository.dart';
 import 'package:noti_flutter/model/user_model.dart';
-import 'package:noti_flutter/provider/talker_provider.dart';
-import 'package:talker_flutter/talker_flutter.dart';
+import 'package:noti_flutter/talker.dart';
 
 final startGuestUserProvider = Provider<StartGuestUserUsecase>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
-  final talker = ref.read(talkerProvider);
-  return StartGuestUserUsecase(authRepository, talker);
+
+  return StartGuestUserUsecase(authRepository);
 });
 
 class StartGuestUserUsecase {
   final AuthRepository _authRepository;
-  final Talker _talker;
 
   StartGuestUserUsecase(
     this._authRepository,
-    this._talker,
   );
 
   String _generateRandomUid() {
@@ -40,10 +36,12 @@ class StartGuestUserUsecase {
           uid: uid, signUpDto: SignUpDto(isAuthUser: false));
 
       if (guest == null) {
-        _talker.log(guest);
+        talkerLog("startGuestUserUsecase", "cannot found guest data");
         throw Exception('Failed to start guest user.');
       }
-      _talker.info('guest user logged in : ${guest.toString()}');
+
+      talkerInfo("startGuestUserUsecase",
+          'guest user logged in : ${guest.toString()}');
       return guest;
     } catch (e) {
       rethrow;

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/features/auth/presentation/test_screen.dart';
 import 'package:noti_flutter/firebase_options.dart';
-import 'package:noti_flutter/provider/talker_provider.dart';
+
+import 'package:noti_flutter/talker.dart';
 import 'package:noti_flutter/timer_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
@@ -15,9 +16,6 @@ void main() async {
   );
   final analytics = FirebaseAnalytics.instance;
   analytics.logAppOpen();
-
-  final container = ProviderContainer();
-  final talker = container.read(talkerProvider);
 
   runApp(
     ProviderScope(

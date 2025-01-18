@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
 import 'package:noti_flutter/model/user_model.dart';
-import 'package:noti_flutter/provider/talker_provider.dart';
+
+import 'package:noti_flutter/talker.dart';
 import 'package:talker/talker.dart';
 
 abstract class AuthRepository {
@@ -29,19 +30,17 @@ abstract class AuthRepository {
 final authRepositoryProvider = Provider((ref) {
   final firebaseAuth = FirebaseAuth.instance;
   final firebaseFirestore = FirebaseFirestore.instance;
-  final talker = ref.read(talkerProvider);
-  return AuthRepositoryImpl(firebaseAuth, firebaseFirestore, talker);
+
+  return AuthRepositoryImpl(firebaseAuth, firebaseFirestore);
 });
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firebaseFireStore;
-  final Talker _talker;
 
   AuthRepositoryImpl(
     this._firebaseAuth,
     this._firebaseFireStore,
-    this._talker,
   );
 
   @override
@@ -51,9 +50,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     try {
       final newUserRef = _firebaseFireStore.collection('users').doc(uid);
-      await newUserRef
-          .set(signUpDto.toJson())
-          .onError((e, _) => _talker.error("Error writing document: $e"));
+      await newUserRef.set(signUpDto.toJson()).onError((e, _) => talkerError(
+          "authRepository(saveUserToFireStore)",
+          "유저 정보를 firestore에 저장하는 데 실패했습니다",
+          e ?? {}));
 
       final user = await newUserRef.get();
 
@@ -95,22 +95,28 @@ class AuthRepositoryImpl implements AuthRepository {
         password: signUpDto.pw!,
       );
       if (userCredential.user == null) {
-        _talker.warning('user not logged in');
+        talkerLog(
+          "authRepository(signUp)",
+          "회원가입한 유저의 정보를 불러 올 수 없습니다",
+        );
         throw Exception('user not logged in');
       }
 
-      _talker.info('user signed up : ${userCredential.user?.uid}');
+      talkerInfo("authRepository(signUp)",
+          'user signed up : ${userCredential.user?.uid}');
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        _talker.error('The password is too weak.');
+        talkerError("authRepository(signUp) ", 'The password is too weak.', e);
         throw Exception('The password is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        _talker.error('The account already exists for that email.');
+        talkerError("authRepository(signUp)",
+            'The account already exists for that email.', e);
         throw Exception('The account already exists for that email.');
       }
     } catch (e, stackTrace) {
-      _talker.error('Unexpected error during signUp : $e', stackTrace);
+      talkerError("authRepository(signUp)",
+          'Unexpected error during signUp : $e', stackTrace);
       rethrow;
     }
     return null;
@@ -129,25 +135,28 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final authUser = userCredential.user;
       if (authUser == null) {
-        _talker.error('Auth user is null after login.');
+        talkerLog("authRepository(logIn)", 'Auth user is null after login.');
         throw FirebaseAuthException(
           code: 'user-not-found',
         );
       }
 
-      _talker.info('user logged in : ${userCredential.user?.uid}');
+      talkerInfo("authRepository(logIn)",
+          'user logged in : ${userCredential.user?.uid}');
       return authUser;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        _talker.error('No user found for that email.');
+        talkerError(
+            "authRepository(logIn)", 'No user found for that email.', e);
         throw Exception('No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        _talker.error('Wrong password provided.');
+        talkerError("authRepository(logIn)", 'Wrong password provided.', e);
         throw Exception('Wrong password provided.');
       }
       rethrow;
     } catch (e, stackTrace) {
-      _talker.error('Unexpected error during login: $e', stackTrace);
+      talkerError(
+          "authRepository(logIn)", 'Wrong password provided. : $e', stackTrace);
       rethrow;
     }
   }
