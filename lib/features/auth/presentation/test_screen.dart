@@ -4,7 +4,7 @@ import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
 import 'package:noti_flutter/features/auth/data/repositories/auth_repository.dart';
 import 'package:noti_flutter/features/auth/domain/sign_up_usecase.dart';
 import 'package:noti_flutter/features/auth/domain/start_guest_user_usecase.dart';
-import 'package:noti_flutter/provider/shared_prefs_provider.dart';
+import 'package:noti_flutter/provider/shared_preferences_provider.dart';
 
 import 'package:noti_flutter/talker.dart';
 
