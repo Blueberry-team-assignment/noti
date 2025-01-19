@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
 import 'package:noti_flutter/features/auth/data/repositories/auth_repository.dart';
 import 'package:noti_flutter/features/auth/domain/sign_up_usecase.dart';
@@ -21,6 +22,16 @@ class TestScreen extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        ElevatedButton(
+            onPressed: () {
+              context.go('/sign_up');
+            },
+            child: const Text("회원가입 페이지로")),
+        ElevatedButton(
+            onPressed: () {
+              context.go('/log_in');
+            },
+            child: const Text("로그인 페이지로")),
         ElevatedButton(
             onPressed: () async {
               final user = await signup.execute(

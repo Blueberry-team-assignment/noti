@@ -5,7 +5,7 @@ import 'package:noti_flutter/model/user_model.dart';
 
 final signUpUsecaseProvider = Provider<SignUpUsecase>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
-  return SignUpUsecase(authRepository) ;
+  return SignUpUsecase(authRepository);
 });
 
 class SignUpUsecase {
@@ -26,7 +26,7 @@ class SignUpUsecase {
 
       final authUser = await _authRepository.saveUserToFireStore(
           uid: newUser.uid, signUpDto: signUpDto);
-      
+
       return authUser;
     } catch (e) {
       rethrow;

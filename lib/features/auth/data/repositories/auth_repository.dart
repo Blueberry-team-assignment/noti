@@ -5,7 +5,6 @@ import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
 import 'package:noti_flutter/model/user_model.dart';
 
 import 'package:noti_flutter/talker.dart';
-import 'package:talker/talker.dart';
 
 abstract class AuthRepository {
   Future<User?> logIn({
