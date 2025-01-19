@@ -17,8 +17,8 @@ class TestScreen extends ConsumerWidget {
     final signup = ref.watch(signUpUsecaseProvider);
     final startGuestUserUsecase = ref.watch(startGuestUserProvider);
     final sharedPrefs = ref.watch(sharedPreferencesProvider);
-    final loginUsecase = ref.watch(logInProvider);
-    final checkUserUsecase = ref.watch(checkUserProvider);
+    final loginUsecase = ref.watch(logInUsecaseProvider);
+    final checkUserUsecase = ref.watch(checkUserUsecaseProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

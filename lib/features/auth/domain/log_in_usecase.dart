@@ -1,17 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/features/auth/data/repositories/auth_repository.dart';
+import 'package:noti_flutter/features/fire_store/auth_repository.dart';
 import 'package:noti_flutter/model/user_model.dart';
 
-final logInProvider = Provider((ref) {
+final logInUsecaseProvider = Provider((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
-  return LogInUsecase(authRepository);
+  final fireStoreRepository = ref.watch(fireStoreRepositoryProvider);
+  return LogInUsecase(authRepository, fireStoreRepository);
 });
 
 class LogInUsecase {
   final AuthRepository _authRepository;
+  final FireStoreRepository _fireStoreRepository;
 
   LogInUsecase(
     this._authRepository,
+    this._fireStoreRepository,
   );
 
   Future<UserModel> execute({
@@ -22,7 +26,7 @@ class LogInUsecase {
     final user = await _authRepository.logIn(email: email, pw: pw);
 
     final authUser =
-        await _authRepository.fetchUserFromFireStore(uid: user.uid);
+        await _fireStoreRepository.fetchUserFromFireStore(uid: user.uid);
     if (authUser == null) {
       throw Exception("cannot fetched user from firestore");
     }

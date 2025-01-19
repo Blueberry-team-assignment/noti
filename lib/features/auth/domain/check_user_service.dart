@@ -1,22 +1,27 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/features/auth/data/repositories/auth_repository.dart';
+import 'package:noti_flutter/features/fire_store/auth_repository.dart';
 import 'package:noti_flutter/model/user_model.dart';
 import 'package:noti_flutter/provider/shared_preferences_provider.dart';
 import 'package:noti_flutter/talker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final checkUserProvider = Provider((ref) {
+final checkUserUsecaseProvider = Provider((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
+  final fireStoreRepository = ref.watch(fireStoreRepositoryProvider);
   final sharedPreferences = ref.watch(sharedPreferencesProvider);
-  return CheckUserService(authRepository, sharedPreferences);
+  return CheckUserService(
+      authRepository, fireStoreRepository, sharedPreferences);
 });
 
 class CheckUserService {
   final AuthRepository _authRepository;
+  final FireStoreRepository _fireStoreRepository;
   final SharedPreferencesAsync _sharedPreferencesAsync;
 
   CheckUserService(
     this._authRepository,
+    this._fireStoreRepository,
     this._sharedPreferencesAsync,
   );
 
@@ -28,7 +33,8 @@ class CheckUserService {
       return null;
     }
 
-    final guest = await _authRepository.fetchUserFromFireStore(uid: guestUid);
+    final guest =
+        await _fireStoreRepository.fetchUserFromFireStore(uid: guestUid);
 
     talkerInfo("checkUserService", "guest logged In : ${guest.toString()}");
     return guest;
@@ -41,7 +47,7 @@ class CheckUserService {
     }
 
     final authUser =
-        await _authRepository.fetchUserFromFireStore(uid: currentUser.uid);
+        await _fireStoreRepository.fetchUserFromFireStore(uid: currentUser.uid);
 
     talkerInfo(
         "checkUserService", "authUser logged In : ${authUser.toString()}");
