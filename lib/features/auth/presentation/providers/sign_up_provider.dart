@@ -29,6 +29,7 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
       ));
       talkerInfo(
           "signUpProvider", "authUser signed up : ${authUser.toString()}");
+      state = state.copyWith(isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
       rethrow;
