@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/auth/presentation/providers/sign_up_provider.dart';
 import 'package:noti_flutter/router/go_router.dart';
 import 'package:noti_flutter/talker.dart';
@@ -121,9 +122,12 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                             Overlay.of(context),
                             const CustomSnackBar.success(
                                 message: "회원가입이 완료되었습니다."));
-                        Future.delayed(const Duration(milliseconds: 2000),
-                            () => router.go("/"));
                       }
+                      Future.delayed(const Duration(milliseconds: 2000), () {
+                        if (context.mounted) {
+                          context.go("/");
+                        }
+                      });
                     }
                   },
                   child: signUpState.isLoading

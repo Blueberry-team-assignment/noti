@@ -2,13 +2,13 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
 import 'package:noti_flutter/features/auth/data/repositories/auth_repository.dart';
-import 'package:noti_flutter/features/fire_store/auth_repository.dart';
+import 'package:noti_flutter/features/fire_store/fire_store_repository.dart';
 import 'package:noti_flutter/model/user_model.dart';
-import 'package:noti_flutter/provider/shared_preferences_provider.dart';
+import 'package:noti_flutter/features/auth/data/shared_preferences_provider.dart';
 import 'package:noti_flutter/talker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final startGuestUserProvider = Provider<StartGuestUserUsecase>((ref) {
+final startGuestUserUsecaseProvider = Provider<StartGuestUserUsecase>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final fireStoreRepository = ref.watch(fireStoreRepositoryProvider);
   final sharedPreferencesAsync = ref.watch(sharedPreferencesProvider);

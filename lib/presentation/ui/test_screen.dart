@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/auth/domain/check_user_service.dart';
 import 'package:noti_flutter/features/auth/domain/log_in_usecase.dart';
 import 'package:noti_flutter/features/auth/domain/start_guest_user_usecase.dart';
-import 'package:noti_flutter/provider/shared_preferences_provider.dart';
+import 'package:noti_flutter/features/auth/data/shared_preferences_provider.dart';
 
 import 'package:noti_flutter/talker.dart';
 
@@ -13,7 +13,7 @@ class TestScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final startGuestUserUsecase = ref.watch(startGuestUserProvider);
+    final startGuestUserUsecase = ref.watch(startGuestUserUsecaseProvider);
     final sharedPrefs = ref.watch(sharedPreferencesProvider);
     final loginUsecase = ref.watch(logInUsecaseProvider);
     final checkUserUsecase = ref.watch(checkUserUsecaseProvider);
