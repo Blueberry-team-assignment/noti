@@ -2,21 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/auth/presentation/providers/sign_up_provider.dart';
-import 'package:noti_flutter/router/go_router.dart';
-import 'package:noti_flutter/talker.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class SignUpScreen extends ConsumerStatefulWidget {
+class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends ConsumerState<SignUpScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final formKey = GlobalKey<FormState>();
     final signUpNotifier = ref.read(signUpNotifierProvider.notifier);
     final signUpState = ref.watch(signUpNotifierProvider);
@@ -109,19 +100,17 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       if (context.mounted) {
-                        showTopSnackBar(
-                            Overlay.of(context),
-                            const CustomSnackBar.info(
-                                message: "회원가입이 진행 중입니다..."));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('회원가입이 진행 중입니다...')),
+                        );
                       }
                       formKey.currentState!.save();
                       await signUpNotifier.signUp();
                       if (context.mounted) {
-                        showTopSnackBar(
-                            displayDuration: const Duration(milliseconds: 2000),
-                            Overlay.of(context),
-                            const CustomSnackBar.success(
-                                message: "회원가입이 완료되었습니다."));
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('회원가입이 완료되었습니다.')),
+                        );
                       }
                       Future.delayed(const Duration(milliseconds: 2000), () {
                         if (context.mounted) {

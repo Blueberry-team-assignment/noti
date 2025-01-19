@@ -18,8 +18,8 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
   ) : super(SignUpState());
 
   Future<void> signUp() async {
-    state = state.copyWith(isLoading: true);
     try {
+      state = state.copyWith(isLoading: true);
       final authUser = await _signUpService.execute(
           signUpDto: SignUpDto(
         isAuthUser: true,
@@ -30,9 +30,9 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
       talkerInfo(
           "signUpProvider", "authUser signed up : ${authUser.toString()}");
     } catch (e) {
+      state = state.copyWith(isLoading: false);
       rethrow;
     }
-    state = state.copyWith(isLoading: false);
   }
 
   void saveNameField({required String name}) {
