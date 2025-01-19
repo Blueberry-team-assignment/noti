@@ -1,14 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
-import 'package:noti_flutter/model/user_model.dart';
-
 import 'package:noti_flutter/talker.dart';
-import 'package:talker/talker.dart';
 
 abstract class AuthRepository {
-  Future<User?> logIn({
+  Future<User> logIn({
     required String email,
     required String pw,
   });
@@ -17,73 +13,21 @@ abstract class AuthRepository {
     required SignUpDto signUpDto,
   });
 
-  Future<UserModel?> saveUserToFireStore({
-    required String uid,
-    required SignUpDto signUpDto,
-  });
-
-  Future<UserModel?> fetchUserFromFireStore({
-    required String uid,
-  });
+  Future<User?> checkUser();
 }
 
 final authRepositoryProvider = Provider((ref) {
   final firebaseAuth = FirebaseAuth.instance;
-  final firebaseFirestore = FirebaseFirestore.instance;
 
-  return AuthRepositoryImpl(firebaseAuth, firebaseFirestore);
+  return AuthRepositoryImpl(firebaseAuth);
 });
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _firebaseAuth;
-  final FirebaseFirestore _firebaseFireStore;
 
   AuthRepositoryImpl(
     this._firebaseAuth,
-    this._firebaseFireStore,
   );
-
-  @override
-  Future<UserModel?> saveUserToFireStore({
-    required String uid,
-    required SignUpDto signUpDto,
-  }) async {
-    try {
-      final newUserRef = _firebaseFireStore.collection('users').doc(uid);
-      await newUserRef.set(signUpDto.toJson()).onError((e, _) => talkerError(
-          "authRepository(saveUserToFireStore)",
-          "유저 정보를 firestore에 저장하는 데 실패했습니다",
-          e ?? {}));
-
-      final user = await newUserRef.get();
-
-      if (!user.exists) return null;
-
-      final data = user.data() as Map<String, dynamic>;
-      data['uid'] = uid;
-      return UserModel.fromJson(data);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  @override
-  Future<UserModel?> fetchUserFromFireStore({
-    required String uid,
-  }) async {
-    try {
-      final docRef = _firebaseFireStore.collection("users").doc(uid);
-
-      final user = await docRef.get();
-      if (!user.exists) return null;
-
-      final data = user.data() as Map<String, dynamic>;
-      data['uid'] = uid;
-      return UserModel.fromJson(data);
-    } catch (e) {
-      return null;
-    }
-  }
 
   @override
   Future<User?> signUp({
@@ -123,7 +67,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User?> logIn({
+  Future<User> logIn({
     required String email,
     required String pw,
   }) async {
@@ -159,5 +103,12 @@ class AuthRepositoryImpl implements AuthRepository {
           "authRepository(logIn)", 'Wrong password provided. : $e', stackTrace);
       rethrow;
     }
+  }
+
+  @override
+  Future<User?> checkUser() async {
+    User? user = _firebaseAuth.currentUser;
+    if (user == null) throw Exception('User not found');
+    return user;
   }
 }
