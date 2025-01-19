@@ -4,17 +4,17 @@ import 'package:noti_flutter/features/auth/data/repositories/auth_repository.dar
 import 'package:noti_flutter/features/fire_store/auth_repository.dart';
 import 'package:noti_flutter/model/user_model.dart';
 
-final signUpUsecaseProvider = Provider<SignUpUsecase>((ref) {
+final signUpServiceProvider = Provider<SignUpService>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final fireStoreRepository = ref.watch(fireStoreRepositoryProvider);
-  return SignUpUsecase(authRepository, fireStoreRepository);
+  return SignUpService(authRepository, fireStoreRepository);
 });
 
-class SignUpUsecase {
+class SignUpService {
   final AuthRepository _authRepository;
   final FireStoreRepository _fireStoreRepository;
 
-  SignUpUsecase(
+  SignUpService(
     this._authRepository,
     this._fireStoreRepository,
   );

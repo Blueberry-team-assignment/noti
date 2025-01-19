@@ -8,5 +8,6 @@ class SignUpState with _$SignUpState {
     @Default("") String name,
     @Default("") String email,
     @Default("") String password,
+    @Default(false) bool isLoading,
   }) = _SignUpState;
 }

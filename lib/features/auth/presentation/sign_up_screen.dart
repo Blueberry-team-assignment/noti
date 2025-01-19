@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:noti_flutter/features/auth/presentation/providers/sign_up_provider.dart';
+import 'package:noti_flutter/router/go_router.dart';
 import 'package:noti_flutter/talker.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -10,12 +14,12 @@ class SignUpScreen extends ConsumerStatefulWidget {
 }
 
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final signUpNotifier = ref.read(signUpNotifierProvider.notifier);
+    final signUpState = ref.watch(signUpNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("회원가입"),
@@ -28,9 +32,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           ),
           child: Form(
             key: formKey,
-            onChanged: () {
-              talkerInfo("sign_up_screen", "form field changed");
-            },
             child: Column(
               spacing: 20,
               children: [
@@ -39,12 +40,16 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     labelText: "이름",
                     hintText: "노티에서 사용하실 이름을 입력해주세요",
                   ),
+                  onSaved: (value) {
+                    if (value == null || value.isEmpty) return;
+                    signUpNotifier.saveNameField(name: value);
+                  },
                   validator: (text) {
                     if (text == null || text.isEmpty) {
                       return "이름을 입력해주세요";
                     }
-                    if (text.length < 2) {
-                      return "이름은 2글자 이상이어야 합니다.";
+                    if (text.length < 2 || text.length > 8) {
+                      return "이름은 2글자 이상 8글자 이하여야 합니다.";
                     }
                     // 영어, 한글, 숫자만 허용하는 정규식
                     final allowedCharactersRegex = RegExp(r'^[a-zA-Z가-힣0-9]+$');
@@ -59,6 +64,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     labelText: "이메일",
                     hintText: "이메일을 입력해주세요",
                   ),
+                  onSaved: (value) {
+                    if (value == null || value.isEmpty) return;
+                    signUpNotifier.saveEmailField(email: value);
+                  },
                   validator: (text) {
                     if (text == null || text.isEmpty) {
                       return "이메일을 입력해주세요.";
@@ -72,10 +81,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   },
                 ),
                 TextFormField(
+                  obscureText: true,
                   decoration: const InputDecoration(
                     labelText: "비밀번호",
                     hintText: "비밀번호를 입력해주세요",
                   ),
+                  onSaved: (value) {
+                    if (value == null || value.isEmpty) return;
+                    signUpNotifier.savePasswordField(password: value);
+                  },
                   validator: (text) {
                     if (text == null || text.isEmpty) {
                       return "비밀번호를 입력해주세요.";
@@ -91,17 +105,30 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   },
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (formKey.currentState!.validate()) {
+                      if (context.mounted) {
+                        showTopSnackBar(
+                            Overlay.of(context),
+                            const CustomSnackBar.info(
+                                message: "회원가입이 진행 중입니다..."));
+                      }
                       formKey.currentState!.save();
-                      talkerInfo(
-                          "sign_up_screen", formKey.currentState.toString());
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data')),
-                      );
+                      await signUpNotifier.signUp();
+                      if (context.mounted) {
+                        showTopSnackBar(
+                            displayDuration: const Duration(milliseconds: 2000),
+                            Overlay.of(context),
+                            const CustomSnackBar.success(
+                                message: "회원가입이 완료되었습니다."));
+                        Future.delayed(const Duration(milliseconds: 2000),
+                            () => router.go("/"));
+                      }
                     }
                   },
-                  child: const Text('Submit'),
+                  child: signUpState.isLoading
+                      ? const CircularProgressIndicator()
+                      : const Text('Submit'),
                 ),
               ],
             ),

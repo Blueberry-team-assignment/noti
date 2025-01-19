@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
 import 'package:noti_flutter/features/auth/domain/check_user_service.dart';
 import 'package:noti_flutter/features/auth/domain/log_in_usecase.dart';
-import 'package:noti_flutter/features/auth/domain/sign_up_usecase.dart';
 import 'package:noti_flutter/features/auth/domain/start_guest_user_usecase.dart';
 import 'package:noti_flutter/provider/shared_preferences_provider.dart';
 
@@ -15,7 +13,6 @@ class TestScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final signup = ref.watch(signUpUsecaseProvider);
     final startGuestUserUsecase = ref.watch(startGuestUserProvider);
     final sharedPrefs = ref.watch(sharedPreferencesProvider);
     final loginUsecase = ref.watch(logInUsecaseProvider);
@@ -34,16 +31,6 @@ class TestScreen extends ConsumerWidget {
               context.go('/log_in');
             },
             child: const Text("로그인 페이지로")),
-        ElevatedButton(
-            onPressed: () async {
-              final user = await signup.execute(
-                  signUpDto: SignUpDto(
-                      email: "efg11@gmail.com",
-                      pw: "1q2w3e4r!",
-                      name: "testuser",
-                      isAuthUser: true));
-            },
-            child: const Text("회원가입")),
         ElevatedButton(
             onPressed: () async {
               await loginUsecase.execute(

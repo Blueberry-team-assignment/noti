@@ -7,7 +7,7 @@ part 'sign_up_dto.g.dart';
 class SignUpDto with _$SignUpDto {
   factory SignUpDto({
     String? email,
-    String? pw,
+    String? password,
     String? name,
     required bool isAuthUser,
   }) = _SignUpDto;
