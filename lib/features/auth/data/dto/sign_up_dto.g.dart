@@ -9,7 +9,7 @@ part of 'sign_up_dto.dart';
 _$SignUpDtoImpl _$$SignUpDtoImplFromJson(Map<String, dynamic> json) =>
     _$SignUpDtoImpl(
       email: json['email'] as String?,
-      pw: json['pw'] as String?,
+      password: json['password'] as String?,
       name: json['name'] as String?,
       isAuthUser: json['isAuthUser'] as bool,
     );
@@ -17,7 +17,7 @@ _$SignUpDtoImpl _$$SignUpDtoImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$SignUpDtoImplToJson(_$SignUpDtoImpl instance) =>
     <String, dynamic>{
       'email': instance.email,
-      'pw': instance.pw,
+      'password': instance.password,
       'name': instance.name,
       'isAuthUser': instance.isAuthUser,
     };

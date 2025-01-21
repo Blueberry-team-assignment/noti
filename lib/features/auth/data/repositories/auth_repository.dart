@@ -36,7 +36,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: signUpDto.email!,
-        password: signUpDto.pw!,
+        password: signUpDto.password!,
       );
       if (userCredential.user == null) {
         talkerLog(
