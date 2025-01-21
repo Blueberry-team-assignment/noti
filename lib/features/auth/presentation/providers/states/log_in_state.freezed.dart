@@ -17,7 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$LogInState {
   String get email => throw _privateConstructorUsedError;
-  String get pw => throw _privateConstructorUsedError;
+  String get password => throw _privateConstructorUsedError;
+  bool get isLoading => throw _privateConstructorUsedError;
 
   /// Create a copy of LogInState
   /// with the given fields replaced by the non-null parameter values.
@@ -32,7 +33,7 @@ abstract class $LogInStateCopyWith<$Res> {
           LogInState value, $Res Function(LogInState) then) =
       _$LogInStateCopyWithImpl<$Res, LogInState>;
   @useResult
-  $Res call({String email, String pw});
+  $Res call({String email, String password, bool isLoading});
 }
 
 /// @nodoc
@@ -51,17 +52,22 @@ class _$LogInStateCopyWithImpl<$Res, $Val extends LogInState>
   @override
   $Res call({
     Object? email = null,
-    Object? pw = null,
+    Object? password = null,
+    Object? isLoading = null,
   }) {
     return _then(_value.copyWith(
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      pw: null == pw
-          ? _value.pw
-          : pw // ignore: cast_nullable_to_non_nullable
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
               as String,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -74,7 +80,7 @@ abstract class _$$LogInStateImplCopyWith<$Res>
       __$$LogInStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String email, String pw});
+  $Res call({String email, String password, bool isLoading});
 }
 
 /// @nodoc
@@ -91,17 +97,22 @@ class __$$LogInStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? email = null,
-    Object? pw = null,
+    Object? password = null,
+    Object? isLoading = null,
   }) {
     return _then(_$LogInStateImpl(
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      pw: null == pw
-          ? _value.pw
-          : pw // ignore: cast_nullable_to_non_nullable
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
               as String,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -109,18 +120,22 @@ class __$$LogInStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LogInStateImpl implements _LogInState {
-  _$LogInStateImpl({this.email = "", this.pw = ""});
+  _$LogInStateImpl(
+      {this.email = "", this.password = "", this.isLoading = false});
 
   @override
   @JsonKey()
   final String email;
   @override
   @JsonKey()
-  final String pw;
+  final String password;
+  @override
+  @JsonKey()
+  final bool isLoading;
 
   @override
   String toString() {
-    return 'LogInState(email: $email, pw: $pw)';
+    return 'LogInState(email: $email, password: $password, isLoading: $isLoading)';
   }
 
   @override
@@ -129,11 +144,14 @@ class _$LogInStateImpl implements _LogInState {
         (other.runtimeType == runtimeType &&
             other is _$LogInStateImpl &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.pw, pw) || other.pw == pw));
+            (identical(other.password, password) ||
+                other.password == password) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, email, pw);
+  int get hashCode => Object.hash(runtimeType, email, password, isLoading);
 
   /// Create a copy of LogInState
   /// with the given fields replaced by the non-null parameter values.
@@ -145,12 +163,17 @@ class _$LogInStateImpl implements _LogInState {
 }
 
 abstract class _LogInState implements LogInState {
-  factory _LogInState({final String email, final String pw}) = _$LogInStateImpl;
+  factory _LogInState(
+      {final String email,
+      final String password,
+      final bool isLoading}) = _$LogInStateImpl;
 
   @override
   String get email;
   @override
-  String get pw;
+  String get password;
+  @override
+  bool get isLoading;
 
   /// Create a copy of LogInState
   /// with the given fields replaced by the non-null parameter values.

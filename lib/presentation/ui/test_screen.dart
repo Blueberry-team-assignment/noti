@@ -34,7 +34,7 @@ class TestScreen extends ConsumerWidget {
         ElevatedButton(
             onPressed: () async {
               await loginUsecase.execute(
-                  email: "efg11@gmail.com", pw: "1q2w3e4r!");
+                  email: "efg11@gmail.com", password: "1q2w3e4r!");
             },
             child: const Text("로그인")),
         ElevatedButton(

@@ -6,7 +6,7 @@ import 'package:noti_flutter/talker.dart';
 abstract class AuthRepository {
   Future<User> logIn({
     required String email,
-    required String pw,
+    required String password,
   });
 
   Future<User?> signUp({
@@ -69,12 +69,12 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<User> logIn({
     required String email,
-    required String pw,
+    required String password,
   }) async {
     try {
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
-        password: pw,
+        password: password,
       );
 
       final authUser = userCredential.user;

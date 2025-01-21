@@ -20,23 +20,27 @@ class LogInUsecase {
 
   Future<UserModel> execute({
     required String email,
-    required String pw,
+    required String password,
   }) async {
-    // try-catch가 필요할까?
-    final user = await _authRepository.logIn(email: email, pw: pw);
+    try {
+      final user =
+          await _authRepository.logIn(email: email, password: password);
 
-    final authUser =
-        await _fireStoreRepository.fetchUserFromFireStore(uid: user.uid);
-    if (authUser == null) {
-      throw Exception("cannot fetched user from firestore");
+      final authUser =
+          await _fireStoreRepository.fetchUserFromFireStore(uid: user.uid);
+      if (authUser == null) {
+        throw Exception("cannot fetched user from firestore");
+      }
+
+      return UserModel(
+        uid: authUser.uid,
+        isAuthUser: true,
+        email: authUser.email,
+        name: authUser.name,
+        recentFlowHistoryIds: authUser.recentFlowHistoryIds,
+      );
+    } catch (e) {
+      rethrow;
     }
-
-    return UserModel(
-      uid: authUser.uid,
-      isAuthUser: true,
-      email: authUser.email,
-      name: authUser.name,
-      recentFlowHistoryIds: authUser.recentFlowHistoryIds,
-    );
   }
 }
