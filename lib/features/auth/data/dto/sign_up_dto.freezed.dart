@@ -21,7 +21,7 @@ SignUpDto _$SignUpDtoFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$SignUpDto {
   String? get email => throw _privateConstructorUsedError;
-  String? get pw => throw _privateConstructorUsedError;
+  String? get password => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   bool get isAuthUser => throw _privateConstructorUsedError;
 
@@ -40,7 +40,7 @@ abstract class $SignUpDtoCopyWith<$Res> {
   factory $SignUpDtoCopyWith(SignUpDto value, $Res Function(SignUpDto) then) =
       _$SignUpDtoCopyWithImpl<$Res, SignUpDto>;
   @useResult
-  $Res call({String? email, String? pw, String? name, bool isAuthUser});
+  $Res call({String? email, String? password, String? name, bool isAuthUser});
 }
 
 /// @nodoc
@@ -59,7 +59,7 @@ class _$SignUpDtoCopyWithImpl<$Res, $Val extends SignUpDto>
   @override
   $Res call({
     Object? email = freezed,
-    Object? pw = freezed,
+    Object? password = freezed,
     Object? name = freezed,
     Object? isAuthUser = null,
   }) {
@@ -68,9 +68,9 @@ class _$SignUpDtoCopyWithImpl<$Res, $Val extends SignUpDto>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
-      pw: freezed == pw
-          ? _value.pw
-          : pw // ignore: cast_nullable_to_non_nullable
+      password: freezed == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
               as String?,
       name: freezed == name
           ? _value.name
@@ -92,7 +92,7 @@ abstract class _$$SignUpDtoImplCopyWith<$Res>
       __$$SignUpDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? email, String? pw, String? name, bool isAuthUser});
+  $Res call({String? email, String? password, String? name, bool isAuthUser});
 }
 
 /// @nodoc
@@ -109,7 +109,7 @@ class __$$SignUpDtoImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? email = freezed,
-    Object? pw = freezed,
+    Object? password = freezed,
     Object? name = freezed,
     Object? isAuthUser = null,
   }) {
@@ -118,9 +118,9 @@ class __$$SignUpDtoImplCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
-      pw: freezed == pw
-          ? _value.pw
-          : pw // ignore: cast_nullable_to_non_nullable
+      password: freezed == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
               as String?,
       name: freezed == name
           ? _value.name
@@ -137,7 +137,8 @@ class __$$SignUpDtoImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$SignUpDtoImpl implements _SignUpDto {
-  _$SignUpDtoImpl({this.email, this.pw, this.name, required this.isAuthUser});
+  _$SignUpDtoImpl(
+      {this.email, this.password, this.name, required this.isAuthUser});
 
   factory _$SignUpDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$SignUpDtoImplFromJson(json);
@@ -145,7 +146,7 @@ class _$SignUpDtoImpl implements _SignUpDto {
   @override
   final String? email;
   @override
-  final String? pw;
+  final String? password;
   @override
   final String? name;
   @override
@@ -153,7 +154,7 @@ class _$SignUpDtoImpl implements _SignUpDto {
 
   @override
   String toString() {
-    return 'SignUpDto(email: $email, pw: $pw, name: $name, isAuthUser: $isAuthUser)';
+    return 'SignUpDto(email: $email, password: $password, name: $name, isAuthUser: $isAuthUser)';
   }
 
   @override
@@ -162,7 +163,8 @@ class _$SignUpDtoImpl implements _SignUpDto {
         (other.runtimeType == runtimeType &&
             other is _$SignUpDtoImpl &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.pw, pw) || other.pw == pw) &&
+            (identical(other.password, password) ||
+                other.password == password) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.isAuthUser, isAuthUser) ||
                 other.isAuthUser == isAuthUser));
@@ -170,7 +172,8 @@ class _$SignUpDtoImpl implements _SignUpDto {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, email, pw, name, isAuthUser);
+  int get hashCode =>
+      Object.hash(runtimeType, email, password, name, isAuthUser);
 
   /// Create a copy of SignUpDto
   /// with the given fields replaced by the non-null parameter values.
@@ -191,7 +194,7 @@ class _$SignUpDtoImpl implements _SignUpDto {
 abstract class _SignUpDto implements SignUpDto {
   factory _SignUpDto(
       {final String? email,
-      final String? pw,
+      final String? password,
       final String? name,
       required final bool isAuthUser}) = _$SignUpDtoImpl;
 
@@ -201,7 +204,7 @@ abstract class _SignUpDto implements SignUpDto {
   @override
   String? get email;
   @override
-  String? get pw;
+  String? get password;
   @override
   String? get name;
   @override

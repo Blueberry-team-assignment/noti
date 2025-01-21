@@ -19,6 +19,7 @@ mixin _$SignUpState {
   String get name => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
+  bool get isLoading => throw _privateConstructorUsedError;
 
   /// Create a copy of SignUpState
   /// with the given fields replaced by the non-null parameter values.
@@ -33,7 +34,7 @@ abstract class $SignUpStateCopyWith<$Res> {
           SignUpState value, $Res Function(SignUpState) then) =
       _$SignUpStateCopyWithImpl<$Res, SignUpState>;
   @useResult
-  $Res call({String name, String email, String password});
+  $Res call({String name, String email, String password, bool isLoading});
 }
 
 /// @nodoc
@@ -54,6 +55,7 @@ class _$SignUpStateCopyWithImpl<$Res, $Val extends SignUpState>
     Object? name = null,
     Object? email = null,
     Object? password = null,
+    Object? isLoading = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -68,6 +70,10 @@ class _$SignUpStateCopyWithImpl<$Res, $Val extends SignUpState>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -80,7 +86,7 @@ abstract class _$$SignUpStateImplCopyWith<$Res>
       __$$SignUpStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, String email, String password});
+  $Res call({String name, String email, String password, bool isLoading});
 }
 
 /// @nodoc
@@ -99,6 +105,7 @@ class __$$SignUpStateImplCopyWithImpl<$Res>
     Object? name = null,
     Object? email = null,
     Object? password = null,
+    Object? isLoading = null,
   }) {
     return _then(_$SignUpStateImpl(
       name: null == name
@@ -113,6 +120,10 @@ class __$$SignUpStateImplCopyWithImpl<$Res>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -120,7 +131,11 @@ class __$$SignUpStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SignUpStateImpl implements _SignUpState {
-  _$SignUpStateImpl({this.name = "", this.email = "", this.password = ""});
+  _$SignUpStateImpl(
+      {this.name = "",
+      this.email = "",
+      this.password = "",
+      this.isLoading = false});
 
   @override
   @JsonKey()
@@ -131,10 +146,13 @@ class _$SignUpStateImpl implements _SignUpState {
   @override
   @JsonKey()
   final String password;
+  @override
+  @JsonKey()
+  final bool isLoading;
 
   @override
   String toString() {
-    return 'SignUpState(name: $name, email: $email, password: $password)';
+    return 'SignUpState(name: $name, email: $email, password: $password, isLoading: $isLoading)';
   }
 
   @override
@@ -145,11 +163,14 @@ class _$SignUpStateImpl implements _SignUpState {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
-                other.password == password));
+                other.password == password) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, email, password);
+  int get hashCode =>
+      Object.hash(runtimeType, name, email, password, isLoading);
 
   /// Create a copy of SignUpState
   /// with the given fields replaced by the non-null parameter values.
@@ -164,7 +185,8 @@ abstract class _SignUpState implements SignUpState {
   factory _SignUpState(
       {final String name,
       final String email,
-      final String password}) = _$SignUpStateImpl;
+      final String password,
+      final bool isLoading}) = _$SignUpStateImpl;
 
   @override
   String get name;
@@ -172,6 +194,8 @@ abstract class _SignUpState implements SignUpState {
   String get email;
   @override
   String get password;
+  @override
+  bool get isLoading;
 
   /// Create a copy of SignUpState
   /// with the given fields replaced by the non-null parameter values.
