@@ -1,10 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
+import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/auth/domain/log_in_usecase.dart';
-import 'package:noti_flutter/features/auth/domain/sign_up_service.dart';
 import 'package:noti_flutter/features/auth/presentation/providers/states/log_in_state.dart';
-import 'package:noti_flutter/features/auth/presentation/providers/states/sign_up_state.dart';
-import 'package:noti_flutter/talker.dart';
 
 final logInNotifierProvider =
     StateNotifierProvider<LogInNotifier, LogInState>((ref) {
@@ -19,16 +17,60 @@ class LogInNotifier extends StateNotifier<LogInState> {
     this._logInUsecase,
   ) : super(LogInState());
 
-  Future<void> login() async {
+  Future<void> login({
+    required GlobalKey<FormState> formKey,
+    required BuildContext context,
+  }) async {
     try {
       state = state.copyWith(isLoading: true);
+      if (formKey.currentState!.validate()) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('로그인 중입니다...')),
+          );
+        }
+        formKey.currentState!.save();
 
-      await _logInUsecase.execute(email: state.email, password: state.password);
+        await _logInUsecase.execute(
+            email: state.email, password: state.password);
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('로그인 되었습니다.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          if (context.mounted) {
+            context.go('/flow');
+          }
+        });
+      }
 
       state = state.copyWith(isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
-      rethrow;
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 20),
+            action: SnackBarAction(
+              label: '닫기',
+              textColor: Colors.white,
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+            ),
+          ),
+        );
+      }
+      // rethrow;
     }
   }
 

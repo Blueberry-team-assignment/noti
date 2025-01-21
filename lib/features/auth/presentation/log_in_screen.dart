@@ -49,27 +49,8 @@ class LogInScreen extends ConsumerWidget {
                   },
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('로그인 중입니다...')),
-                        );
-                      }
-                      formKey.currentState!.save();
-                      await logInNotifier.login();
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('로그인 되었습니다.')),
-                        );
-                      }
-                      Future.delayed(const Duration(milliseconds: 1000), () {
-                        if (context.mounted) {
-                          context.go('/flow');
-                        }
-                      });
-                    }
+                  onPressed: () {
+                    logInNotifier.login(formKey: formKey, context: context);
                   },
                   child: logInState.isLoading
                       ? const CircularProgressIndicator()

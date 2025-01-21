@@ -97,27 +97,8 @@ class SignUpScreen extends ConsumerWidget {
                   },
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('회원가입이 진행 중입니다...')),
-                        );
-                      }
-                      formKey.currentState!.save();
-                      await signUpNotifier.signUp();
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('회원가입이 완료되었습니다.')),
-                        );
-                      }
-                      Future.delayed(const Duration(milliseconds: 2000), () {
-                        if (context.mounted) {
-                          context.go("/");
-                        }
-                      });
-                    }
+                  onPressed: () {
+                    signUpNotifier.signUp(formKey: formKey, context: context);
                   },
                   child: signUpState.isLoading
                       ? const CircularProgressIndicator()
