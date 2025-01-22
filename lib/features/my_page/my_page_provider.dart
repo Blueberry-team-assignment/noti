@@ -1,19 +1,25 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/data/auth/auth_repository.dart';
+import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 import 'package:noti_flutter/models/user_model.dart';
 
 final myPageNotifierProvider =
-    StateNotifierProvider<MyPageNotifier, MyPageState>((ref) {
+    StateNotifierProvider.family<MyPageNotifier, MyPageState, UserState>(
+        (ref, userState) {
   final authRepository = ref.watch(authRepositoryProvider);
-  return MyPageNotifier(authRepository);
+  return MyPageNotifier(authRepository, userState);
 });
 
 class MyPageNotifier extends StateNotifier<MyPageState> {
   final AuthRepository _authRepository;
+  final UserState _userState;
 
   MyPageNotifier(
     this._authRepository,
-  ) : super(MyPageState());
+    this._userState,
+  ) : super(MyPageState()) {
+    state = MyPageState(user: _userState.user);
+  }
 
   Future<void> logout() async {
     try {

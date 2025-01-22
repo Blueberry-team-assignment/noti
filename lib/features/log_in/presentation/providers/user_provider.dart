@@ -1,22 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/features/log_in/domain/check_user_service.dart';
 import 'package:noti_flutter/features/log_in/domain/log_in_usecase.dart';
+import 'package:noti_flutter/features/log_in/domain/start_guest_user_service.dart';
 import 'package:noti_flutter/models/user_model.dart';
 
 final userNotifierProvider =
     StateNotifierProvider<UserNotifier, UserState>((ref) {
   final logInUsecase = ref.watch(logInUsecaseProvider);
   final checkUserService = ref.watch(checkUserUsecaseProvider);
-  return UserNotifier(logInUsecase, checkUserService);
+  final startGuestUserService = ref.watch(startGuestUserServiceProvider);
+  return UserNotifier(logInUsecase, checkUserService, startGuestUserService);
 });
 
 class UserNotifier extends StateNotifier<UserState> {
   final LogInUsecase _logInUsecase;
   final CheckUserService _checkUserService;
+  final StartGuestUserService _startGuestUserService;
 
   UserNotifier(
     this._logInUsecase,
     this._checkUserService,
+    this._startGuestUserService,
   ) : super(UserState()) {
     checkUserState();
   }
@@ -48,6 +52,19 @@ class UserNotifier extends StateNotifier<UserState> {
     } catch (e) {
       setLoading(false);
       // rethrow;
+    }
+  }
+
+  Future<void> startGuestUser() async {
+    try {
+      setLoading(true);
+
+      final guest = await _startGuestUserService.startGuestUser();
+
+      state = UserState(user: guest);
+    } catch (e) {
+      setLoading(false);
+      rethrow;
     }
   }
 

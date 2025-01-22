@@ -8,21 +8,17 @@ import 'package:noti_flutter/data/local_storage/shared_preferences_provider.dart
 import 'package:noti_flutter/talker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final startGuestUserUsecaseProvider = Provider<StartGuestUserUsecase>((ref) {
-  final authRepository = ref.watch(authRepositoryProvider);
+final startGuestUserServiceProvider = Provider<StartGuestUserService>((ref) {
   final fireStoreRepository = ref.watch(fireStoreRepositoryProvider);
   final sharedPreferencesAsync = ref.watch(sharedPreferencesProvider);
-  return StartGuestUserUsecase(
-      authRepository, fireStoreRepository, sharedPreferencesAsync);
+  return StartGuestUserService(fireStoreRepository, sharedPreferencesAsync);
 });
 
-class StartGuestUserUsecase {
-  final AuthRepository _authRepository;
+class StartGuestUserService {
   final FireStoreRepository _fireStoreRepository;
   final SharedPreferencesAsync _sharedPreferencesAsync;
 
-  StartGuestUserUsecase(
-    this._authRepository,
+  StartGuestUserService(
     this._fireStoreRepository,
     this._sharedPreferencesAsync,
   );
@@ -36,7 +32,7 @@ class StartGuestUserUsecase {
     return '${DateTime.now().toIso8601String()}$randomString';
   }
 
-  Future<UserModel> execute() async {
+  Future<UserModel> startGuestUser() async {
     final uid = _generateRandomUid();
     try {
       UserModel? guest =
@@ -49,7 +45,7 @@ class StartGuestUserUsecase {
       talkerInfo("startGuestUser", guest.uid);
 
       await _sharedPreferencesAsync.setString("uid", guest.uid.toString());
-      talkerInfo("startGuestUserUsecase",
+      talkerInfo("startGuestUserService",
           'guest user logged in : ${guest.toString()}');
       return guest;
     } catch (e) {

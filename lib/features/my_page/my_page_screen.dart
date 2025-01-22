@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 import 'package:noti_flutter/features/my_page/my_page_provider.dart';
 
 class MyPageScreen extends ConsumerWidget {
@@ -8,9 +9,12 @@ class MyPageScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final myPageNotifier = ref.watch(myPageNotifierProvider.notifier);
+    // 맞는지 모르겠읍니다
+    final userState = ref.watch(userNotifierProvider);
+    final myPageState = ref.watch(myPageNotifierProvider(userState));
+    final myPageNotifier = ref.read(myPageNotifierProvider(userState).notifier);
 
-    ref.listen(myPageNotifierProvider, (prev, next) {
+    ref.listen(myPageNotifierProvider(userState), (prev, next) {
       if (next.user == null) {
         context.go('/log_in');
       }
@@ -20,6 +24,7 @@ class MyPageScreen extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         const Text("User"),
+        Text(myPageState.user.toString()),
         ElevatedButton(
             onPressed: () {
               myPageNotifier.logout();
