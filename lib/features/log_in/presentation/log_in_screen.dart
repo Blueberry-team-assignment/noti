@@ -81,11 +81,6 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                             ),
                           );
                         }
-                        Future.delayed(const Duration(milliseconds: 1000), () {
-                          if (context.mounted) {
-                            context.replace('/flow');
-                          }
-                        });
                       }
                     } catch (e) {
                       if (context.mounted) {
