@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/features/auth/presentation/providers/log_in_provider.dart';
+import 'package:noti_flutter/features/log_in/presentation/providers/log_in_provider.dart';
 
 class LogInScreen extends ConsumerWidget {
   const LogInScreen({super.key});

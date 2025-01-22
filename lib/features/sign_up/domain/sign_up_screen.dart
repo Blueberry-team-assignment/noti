@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/features/auth/presentation/providers/sign_up_provider.dart';
+import 'package:noti_flutter/features/sign_up/presentation/providers/sign_up_provider.dart';
 
 class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({super.key});

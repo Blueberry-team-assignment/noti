@@ -1,70 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
-import 'package:noti_flutter/features/auth/domain/sign_up_service.dart';
-import 'package:noti_flutter/features/auth/presentation/providers/states/sign_up_state.dart';
-import 'package:noti_flutter/talker.dart';
+import 'package:noti_flutter/features/log_in/domain/log_in_usecase.dart';
+import 'package:noti_flutter/features/log_in/presentation/providers/states/log_in_state.dart';
 
-final signUpNotifierProvider =
-    StateNotifierProvider<SignUpNotifier, SignUpState>((ref) {
-  final signUpService = ref.watch(signUpServiceProvider);
-  return SignUpNotifier(signUpService);
+final logInNotifierProvider =
+    StateNotifierProvider<LogInNotifier, LogInState>((ref) {
+  final logInUsecase = ref.watch(logInUsecaseProvider);
+  return LogInNotifier(logInUsecase);
 });
 
-class SignUpNotifier extends StateNotifier<SignUpState> {
-  final SignUpService _signUpService;
+class LogInNotifier extends StateNotifier<LogInState> {
+  final LogInUsecase _logInUsecase;
 
-  SignUpNotifier(
-    this._signUpService,
-  ) : super(SignUpState());
+  LogInNotifier(
+    this._logInUsecase,
+  ) : super(LogInState());
 
-  Future<void> signUp({
+  Future<void> login({
     required GlobalKey<FormState> formKey,
     required BuildContext context,
   }) async {
     try {
       state = state.copyWith(isLoading: true);
-
       if (formKey.currentState!.validate()) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('회원가입이 진행 중입니다...')),
+            const SnackBar(content: Text('로그인 중입니다...')),
           );
         }
         formKey.currentState!.save();
 
-        final authUser = await _signUpService.execute(
-            signUpDto: SignUpDto(
-          isAuthUser: true,
-          name: state.name,
-          password: state.password,
-          email: state.email,
-        ));
+        await _logInUsecase.execute(
+            email: state.email, password: state.password);
 
         if (context.mounted) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('회원가입이 완료되었습니다.'),
+              content: Text('로그인 되었습니다.'),
               backgroundColor: Colors.green,
             ),
           );
         }
-        Future.delayed(const Duration(milliseconds: 2000), () {
+        Future.delayed(const Duration(milliseconds: 1000), () {
           if (context.mounted) {
-            context.go("/");
+            context.replace('/flow');
           }
         });
-
-        talkerInfo(
-            "signUpProvider", "authUser signed up : ${authUser.toString()}");
       }
 
       state = state.copyWith(isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
-
       if (context.mounted) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -86,15 +74,11 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
     }
   }
 
-  void saveNameField({required String name}) {
-    state = state.copyWith(name: name);
-  }
-
-  void savePasswordField({required String password}) {
-    state = state.copyWith(password: password);
-  }
-
-  void saveEmailField({required String email}) {
+  void setEmailField({required String email}) {
     state = state.copyWith(email: email);
+  }
+
+  void setPasswordField({required String password}) {
+    state = state.copyWith(password: password);
   }
 }

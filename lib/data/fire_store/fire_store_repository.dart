@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
-import 'package:noti_flutter/model/user_model.dart';
+import 'package:noti_flutter/dto/sign_up_dto.dart';
+import 'package:noti_flutter/models/user_model.dart';
 import 'package:noti_flutter/talker.dart';
 
 abstract class FireStoreRepository {

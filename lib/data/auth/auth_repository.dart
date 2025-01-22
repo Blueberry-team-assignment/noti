@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:noti_flutter/features/auth/data/dto/sign_up_dto.dart';
+import 'package:noti_flutter/dto/sign_up_dto.dart';
 import 'package:noti_flutter/talker.dart';
 
 abstract class AuthRepository {

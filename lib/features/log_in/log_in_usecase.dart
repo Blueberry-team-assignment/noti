@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:noti_flutter/features/auth/data/repositories/auth_repository.dart';
-import 'package:noti_flutter/features/fire_store/fire_store_repository.dart';
-import 'package:noti_flutter/model/user_model.dart';
+import 'package:noti_flutter/data/auth/auth_repository.dart';
+import 'package:noti_flutter/data/fire_store/fire_store_repository.dart';
+import 'package:noti_flutter/models/user_model.dart';
 
 final logInUsecaseProvider = Provider((ref) {
   final authRepository = ref.watch(authRepositoryProvider);

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/features/auth/domain/check_user_service.dart';
-import 'package:noti_flutter/features/auth/domain/log_in_usecase.dart';
-import 'package:noti_flutter/features/auth/domain/start_guest_user_usecase.dart';
-import 'package:noti_flutter/features/auth/data/shared_preferences_provider.dart';
+import 'package:noti_flutter/features/log_in/domain/check_user_service.dart';
+import 'package:noti_flutter/features/log_in/domain/log_in_usecase.dart';
+import 'package:noti_flutter/features/log_in/domain/start_guest_user_usecase.dart';
+import 'package:noti_flutter/data/local_storage/shared_preferences_provider.dart';
 
 import 'package:noti_flutter/talker.dart';
 
