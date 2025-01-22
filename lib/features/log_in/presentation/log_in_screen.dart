@@ -23,7 +23,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
 
     ref.listen(userNotifierProvider, (prev, next) {
       if (next.user != null) {
-        context.go('/flow');
+        context.go('/home');
       }
     });
 
