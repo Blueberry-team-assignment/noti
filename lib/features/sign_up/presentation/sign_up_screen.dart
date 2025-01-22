@@ -105,7 +105,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   },
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     try {
                       if (formKey.currentState!.validate()) {
                         if (context.mounted) {
@@ -114,7 +114,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           );
                         }
 
-                        signUpNotifier.signUp(
+                        await signUpNotifier.signUp(
                             name: _nameController.text,
                             email: _emailController.text,
                             password: _passwordController.text);
@@ -130,7 +130,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         }
                         Future.delayed(const Duration(milliseconds: 1000), () {
                           if (context.mounted) {
-                            context.go("/");
+                            context.go("/log_in");
                           }
                         });
                       }

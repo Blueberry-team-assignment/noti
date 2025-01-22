@@ -14,6 +14,8 @@ abstract class AuthRepository {
   });
 
   Future<User?> checkUser();
+
+  Future<void> logOut();
 }
 
 final authRepositoryProvider = Provider((ref) {
@@ -110,5 +112,10 @@ class AuthRepositoryImpl implements AuthRepository {
     User? user = _firebaseAuth.currentUser;
     if (user == null) throw Exception('User not found');
     return user;
+  }
+
+  @override
+  Future<void> logOut() async {
+    await _firebaseAuth.signOut();
   }
 }

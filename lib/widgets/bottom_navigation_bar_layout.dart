@@ -21,7 +21,7 @@ class BottomNavigationBarLayout extends StatelessWidget {
               router.go('/flow');
               break;
             case 2:
-              router.go('/user');
+              router.go('/my_page');
               break;
           }
         },
@@ -36,7 +36,7 @@ class BottomNavigationBarLayout extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
-            label: 'User',
+            label: 'MyPage',
           ),
         ],
       ),
@@ -51,7 +51,7 @@ class BottomNavigationBarLayout extends StatelessWidget {
     if (location?.startsWith('/flow') ?? false) {
       return 1;
     }
-    if (location?.startsWith('/user') ?? false) {
+    if (location?.startsWith('/my_page') ?? false) {
       return 2;
     }
     return 0;

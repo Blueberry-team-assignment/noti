@@ -28,9 +28,10 @@ class UserNotifier extends StateNotifier<UserState> {
     try {
       setLoading(true);
 
-      await _logInUsecase.execute(email: email, password: password);
+      final authUser =
+          await _logInUsecase.execute(email: email, password: password);
 
-      setLoading(false);
+      state = UserState(user: authUser);
     } catch (e) {
       setLoading(false);
       rethrow;
@@ -46,7 +47,7 @@ class UserNotifier extends StateNotifier<UserState> {
       state = UserState(user: user);
     } catch (e) {
       setLoading(false);
-      rethrow;
+      // rethrow;
     }
   }
 

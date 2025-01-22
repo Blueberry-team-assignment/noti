@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/flow/flow_screen.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
+import 'package:noti_flutter/talker.dart';
 
 class LogInScreen extends ConsumerStatefulWidget {
   const LogInScreen({super.key});
@@ -22,6 +23,8 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
     final userNotifier = ref.read(userNotifierProvider.notifier);
 
     ref.listen(userNotifierProvider, (prev, next) {
+      talkerInfo("loginScreen",
+          "prev: ${prev?.user.toString()}, next: ${next.user.toString()}");
       if (next.user != null) {
         context.go('/home');
       }
@@ -37,78 +40,89 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
             vertical: 10,
             horizontal: 20,
           ),
-          child: Form(
-            key: formKey,
-            child: Column(
-              spacing: 20,
-              children: [
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "이메일",
-                    hintText: "이메일을 입력해주세요",
-                  ),
-                  controller: _emailController,
-                ),
-                TextFormField(
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: "비밀번호",
-                    hintText: "비밀번호를 입력해주세요",
-                  ),
-                  controller: _passwordController,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    try {
-                      if (formKey.currentState!.validate()) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('로그인 중입니다...')),
-                          );
-                        }
+          child: Column(
+            children: [
+              Form(
+                key: formKey,
+                child: Column(
+                  spacing: 20,
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: "이메일",
+                        hintText: "이메일을 입력해주세요",
+                      ),
+                      controller: _emailController,
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: "비밀번호",
+                        hintText: "비밀번호를 입력해주세요",
+                      ),
+                      controller: _passwordController,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          if (formKey.currentState!.validate()) {
+                            // if (context.mounted) {
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     const SnackBar(content: Text('로그인 중입니다...')),
+                            //   );
+                            // }
 
-                        userNotifier.login(
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                        );
+                            userNotifier.login(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                            );
 
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('로그인 되었습니다.'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('로그인 되었습니다.'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.toString()),
+                                backgroundColor: Colors.red,
+                                duration: const Duration(seconds: 20),
+                                action: SnackBarAction(
+                                  label: '닫기',
+                                  textColor: Colors.white,
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                  },
+                                ),
+                              ),
+                            );
+                          }
                         }
-                      }
-                    } catch (e) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(e.toString()),
-                            backgroundColor: Colors.red,
-                            duration: const Duration(seconds: 20),
-                            action: SnackBarAction(
-                              label: '닫기',
-                              textColor: Colors.white,
-                              onPressed: () {
-                                ScaffoldMessenger.of(context)
-                                    .hideCurrentSnackBar();
-                              },
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                  },
-                  child: userState.isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text('LogIn'),
+                      },
+                      child: userState.isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text('LogIn'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  context.push('/sign_up');
+                },
+                child: const Text("회원가입"),
+              )
+            ],
           ),
         ),
       ),

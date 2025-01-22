@@ -5,7 +5,7 @@ import 'package:noti_flutter/features/sign_up/presentation/sign_up_screen.dart';
 import 'package:noti_flutter/features/flow/flow_screen.dart';
 import 'package:noti_flutter/widgets/bottom_navigation_bar_layout.dart';
 import 'package:noti_flutter/widgets/home_screen.dart';
-import 'package:noti_flutter/widgets/user_screen.dart';
+import 'package:noti_flutter/features/my_page/my_page_screen.dart';
 
 final router = GoRouter(
   initialLocation: '/log_in',
@@ -26,9 +26,9 @@ final router = GoRouter(
               const HomeScreen(),
         ),
         GoRoute(
-          path: '/user',
+          path: '/my_page',
           builder: (BuildContext context, GoRouterState state) =>
-              const UserScreen(),
+              const MyPageScreen(),
         ),
       ],
     ),
