@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/log_in/presentation/log_in_screen.dart';
-import 'package:noti_flutter/features/sign_up/domain/sign_up_screen.dart';
+import 'package:noti_flutter/features/sign_up/presentation/sign_up_screen.dart';
 import 'package:noti_flutter/features/flow/flow_screen.dart';
 import 'package:noti_flutter/presentation/ui/test_screen.dart';
 
@@ -15,7 +15,7 @@ final router = GoRouter(
         GoRoute(
           path: 'sign_up',
           builder: (BuildContext context, GoRouterState state) =>
-              const SignUpScreen(),
+              SignUpScreen(),
         ),
         GoRoute(
           path: 'log_in',

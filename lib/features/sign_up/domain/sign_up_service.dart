@@ -19,7 +19,7 @@ class SignUpService {
     this._fireStoreRepository,
   );
 
-  Future<UserModel?> execute({
+  Future<UserModel?> signUpAndSave({
     required SignUpDto signUpDto,
   }) async {
     try {

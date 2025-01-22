@@ -3,12 +3,29 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/sign_up/presentation/providers/sign_up_provider.dart';
 
-class SignUpScreen extends ConsumerWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final formKey = GlobalKey<FormState>();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final signUpNotifier = ref.read(signUpNotifierProvider.notifier);
     final signUpState = ref.watch(signUpNotifierProvider);
 
@@ -32,10 +49,7 @@ class SignUpScreen extends ConsumerWidget {
                     labelText: "이름",
                     hintText: "노티에서 사용하실 이름을 입력해주세요",
                   ),
-                  onSaved: (value) {
-                    if (value == null || value.isEmpty) return;
-                    signUpNotifier.saveNameField(name: value);
-                  },
+                  controller: _nameController,
                   validator: (text) {
                     if (text == null || text.isEmpty) {
                       return "이름을 입력해주세요";
@@ -56,10 +70,7 @@ class SignUpScreen extends ConsumerWidget {
                     labelText: "이메일",
                     hintText: "이메일을 입력해주세요",
                   ),
-                  onSaved: (value) {
-                    if (value == null || value.isEmpty) return;
-                    signUpNotifier.saveEmailField(email: value);
-                  },
+                  controller: _emailController,
                   validator: (text) {
                     if (text == null || text.isEmpty) {
                       return "이메일을 입력해주세요.";
@@ -78,10 +89,7 @@ class SignUpScreen extends ConsumerWidget {
                     labelText: "비밀번호",
                     hintText: "비밀번호를 입력해주세요",
                   ),
-                  onSaved: (value) {
-                    if (value == null || value.isEmpty) return;
-                    signUpNotifier.savePasswordField(password: value);
-                  },
+                  controller: _passwordController,
                   validator: (text) {
                     if (text == null || text.isEmpty) {
                       return "비밀번호를 입력해주세요.";
@@ -98,7 +106,54 @@ class SignUpScreen extends ConsumerWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    signUpNotifier.signUp(formKey: formKey, context: context);
+                    try {
+                      if (formKey.currentState!.validate()) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('회원가입이 진행 중입니다...')),
+                          );
+                        }
+
+                        signUpNotifier.signUp(
+                            name: _nameController.text,
+                            email: _emailController.text,
+                            password: _passwordController.text);
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('회원가입이 완료되었습니다.'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        }
+                        Future.delayed(const Duration(milliseconds: 1000), () {
+                          if (context.mounted) {
+                            context.replace("/");
+                          }
+                        });
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.toString()),
+                            backgroundColor: Colors.red,
+                            duration: const Duration(seconds: 20),
+                            action: SnackBarAction(
+                              label: '닫기',
+                              textColor: Colors.white,
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                              },
+                            ),
+                          ),
+                        );
+                      }
+                    }
                   },
                   child: signUpState.isLoading
                       ? const CircularProgressIndicator()

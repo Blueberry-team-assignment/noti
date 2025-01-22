@@ -54,11 +54,15 @@ class CheckUserService {
     return authUser;
   }
 
-  Future<UserModel?> execute() async {
-    final authUser = await checkAuthUser();
-    if (authUser == null) {
-      return await checkGuestUser();
+  Future<UserModel?> checkUser() async {
+    try {
+      final authUser = await checkAuthUser();
+      if (authUser == null) {
+        return await checkGuestUser();
+      }
+      return authUser;
+    } catch (e) {
+      rethrow;
     }
-    return authUser;
   }
 }
