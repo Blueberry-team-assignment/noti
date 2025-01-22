@@ -20,7 +20,7 @@ void main() async {
     ProviderScope(
       observers: [
         TalkerRiverpodObserver(
-          talker: talker,
+          //talker: talker,
           settings: const TalkerRiverpodLoggerSettings(
             printProviderDisposed: true,
           ),

@@ -25,7 +25,7 @@ class CheckUserService {
     this._sharedPreferencesAsync,
   );
 
-  Future<UserModel?> checkGuestUser() async {
+  Future<UserModel?> _checkGuestUser() async {
     // 비회원으로 로그인한적 있다면, sharedPreferences에 uid 저장되어 있음.
     final guestUid = await _sharedPreferencesAsync.getString("uid");
     if (guestUid == null) {
@@ -40,7 +40,7 @@ class CheckUserService {
     return guest;
   }
 
-  Future<UserModel?> checkAuthUser() async {
+  Future<UserModel?> _checkAuthUser() async {
     final currentUser = await _authRepository.checkUser();
     if (currentUser == null) {
       return null;
@@ -56,9 +56,9 @@ class CheckUserService {
 
   Future<UserModel?> checkUser() async {
     try {
-      final authUser = await checkAuthUser();
+      final authUser = await _checkAuthUser();
       if (authUser == null) {
-        return await checkGuestUser();
+        return await _checkGuestUser();
       }
       return authUser;
     } catch (e) {

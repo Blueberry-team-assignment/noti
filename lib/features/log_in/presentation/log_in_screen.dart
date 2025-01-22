@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noti_flutter/features/flow/flow_screen.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 
 class LogInScreen extends ConsumerStatefulWidget {
@@ -19,6 +20,12 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
   Widget build(BuildContext context) {
     final userState = ref.watch(userNotifierProvider);
     final userNotifier = ref.read(userNotifierProvider.notifier);
+
+    ref.listen(userNotifierProvider, (prev, next) {
+      if (next.user != null) {
+        context.go('/flow');
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(

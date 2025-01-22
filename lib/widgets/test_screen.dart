@@ -39,7 +39,7 @@ class TestScreen extends ConsumerWidget {
             child: const Text("로그인")),
         ElevatedButton(
             onPressed: () async {
-              await checkUserUsecase.execute();
+              await checkUserUsecase.checkUser();
             },
             child: const Text("자동 로그인 체크")),
         ElevatedButton(

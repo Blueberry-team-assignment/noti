@@ -130,7 +130,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         }
                         Future.delayed(const Duration(milliseconds: 1000), () {
                           if (context.mounted) {
-                            context.replace("/");
+                            context.go("/");
                           }
                         });
                       }

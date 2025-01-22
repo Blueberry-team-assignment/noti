@@ -3,19 +3,19 @@ import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/log_in/presentation/log_in_screen.dart';
 import 'package:noti_flutter/features/sign_up/presentation/sign_up_screen.dart';
 import 'package:noti_flutter/features/flow/flow_screen.dart';
-import 'package:noti_flutter/presentation/ui/test_screen.dart';
+import 'package:noti_flutter/widgets/test_screen.dart';
 
 final router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) =>
-          const TestScreen(),
+          const LogInScreen(),
       routes: [
         GoRoute(
           path: 'sign_up',
           builder: (BuildContext context, GoRouterState state) =>
-              SignUpScreen(),
+              const SignUpScreen(),
         ),
         GoRoute(
           path: 'log_in',

@@ -45,7 +45,7 @@ class UserNotifier extends StateNotifier<UserState> {
 
       state = UserState(user: user);
     } catch (e) {
-      setLoading(true);
+      setLoading(false);
       rethrow;
     }
   }
