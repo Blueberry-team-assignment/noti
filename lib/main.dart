@@ -20,10 +20,11 @@ void main() async {
     ProviderScope(
       observers: [
         TalkerRiverpodObserver(
-            talker: talker,
-            settings: const TalkerRiverpodLoggerSettings(
-              printProviderDisposed: true,
-            )),
+          talker: talker,
+          settings: const TalkerRiverpodLoggerSettings(
+            printProviderDisposed: true,
+          ),
+        ),
       ],
       child: const NotiFlutter(),
     ),
