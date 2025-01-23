@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/data/flow/flow_repository.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -15,7 +16,7 @@ class HomeScreen extends ConsumerWidget {
         const Text("home"),
         ElevatedButton(
           onPressed: () {
-            // flowRepository.createFlow(uid: uid, flowDto: flowDto),
+            context.push("/flow_register");
           },
           child: const Text('flow 생성'),
         )
