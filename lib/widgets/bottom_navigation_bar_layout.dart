@@ -4,7 +4,10 @@ import 'package:noti_flutter/router/go_router.dart';
 class BottomNavigationBarLayout extends StatelessWidget {
   final Widget child;
 
-  const BottomNavigationBarLayout({super.key, required this.child});
+  const BottomNavigationBarLayout({
+    super.key,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -17,18 +17,18 @@ final router = GoRouter(
       routes: [
         GoRoute(
           path: '/flow',
-          builder: (BuildContext context, GoRouterState state) =>
-              const FlowScreen(),
+          pageBuilder: (BuildContext context, GoRouterState state) =>
+              const NoTransitionPage(child: FlowScreen()),
         ),
         GoRoute(
           path: '/home',
-          builder: (BuildContext context, GoRouterState state) =>
-              const HomeScreen(),
+          pageBuilder: (BuildContext context, GoRouterState state) =>
+              const NoTransitionPage(child: HomeScreen()),
         ),
         GoRoute(
           path: '/my_page',
-          builder: (BuildContext context, GoRouterState state) =>
-              const MyPageScreen(),
+          pageBuilder: (BuildContext context, GoRouterState state) =>
+              const NoTransitionPage(child: MyPageScreen()),
         ),
       ],
     ),
