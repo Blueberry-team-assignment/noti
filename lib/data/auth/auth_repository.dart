@@ -120,6 +120,10 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logOut() async {
-    await _firebaseAuth.signOut();
+    try {
+      await _firebaseAuth.signOut();
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }

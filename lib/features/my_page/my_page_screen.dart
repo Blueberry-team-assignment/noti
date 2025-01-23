@@ -11,6 +11,7 @@ class MyPageScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 맞는지 모르겠읍니다
     final userState = ref.watch(userNotifierProvider);
+    final userNotifier = ref.watch(userNotifierProvider.notifier);
     final myPageState = ref.watch(myPageNotifierProvider(userState));
     final myPageNotifier = ref.read(myPageNotifierProvider(userState).notifier);
 
@@ -26,8 +27,11 @@ class MyPageScreen extends ConsumerWidget {
         const Text("User"),
         Text(myPageState.user.toString()),
         ElevatedButton(
-            onPressed: () {
-              myPageNotifier.logout();
+            onPressed: () async {
+              try {
+                await myPageNotifier.logout();
+                userNotifier.resetUserState();
+              } catch (e) {}
             },
             child: const Text("logout")),
       ],

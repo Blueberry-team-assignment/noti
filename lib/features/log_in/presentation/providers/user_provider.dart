@@ -6,7 +6,7 @@ import 'package:noti_flutter/models/user_model.dart';
 import 'package:noti_flutter/talker.dart';
 
 final userNotifierProvider =
-    StateNotifierProvider<UserNotifier, UserState>((ref) {
+    StateNotifierProvider.autoDispose<UserNotifier, UserState>((ref) {
   final logInUsecase = ref.watch(logInUsecaseProvider);
   final checkUserService = ref.watch(checkUserUsecaseProvider);
   final startGuestUserService = ref.watch(startGuestUserServiceProvider);
@@ -35,6 +35,9 @@ class UserNotifier extends StateNotifier<UserState> {
 
       final authUser =
           await _logInUsecase.execute(email: email, password: password);
+      if (authUser == null) {
+        return;
+      }
 
       state = UserState(user: authUser);
     } catch (e) {
@@ -66,6 +69,10 @@ class UserNotifier extends StateNotifier<UserState> {
       setLoading(false);
       rethrow;
     }
+  }
+
+  void resetUserState() {
+    state = UserState();
   }
 
   void setLoading(bool loading) {

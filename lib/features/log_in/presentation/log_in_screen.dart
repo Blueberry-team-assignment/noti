@@ -23,10 +23,9 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
     final userNotifier = ref.read(userNotifierProvider.notifier);
     final sharedPrefs = ref.watch(sharedPreferencesProvider); // test용
 
-    // 이게 최선인지 모르겠어요
     ref.listen(userNotifierProvider, (prev, next) {
       talkerInfo("loginScreen",
-          "prev: ${prev?.user.toString()}, next: ${next.user.toString()}");
+          "prev: ${prev?.user.toString()}, isLoading :${prev?.isLoading}, next: ${next.user.toString()}, isLoading :${next.isLoading}");
       if (next.user != null) {
         context.go('/home');
       }
@@ -74,7 +73,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                             //   );
                             // }
 
-                            userNotifier.login(
+                            await userNotifier.login(
                               email: _emailController.text,
                               password: _passwordController.text,
                             );

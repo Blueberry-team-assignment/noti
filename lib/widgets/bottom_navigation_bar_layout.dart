@@ -12,7 +12,13 @@ class BottomNavigationBarLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: child,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 30,
+        ),
+        child: child,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _calculateSelectedIndex(context),
         onTap: (index) {

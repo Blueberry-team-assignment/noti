@@ -18,7 +18,7 @@ class LogInUsecase {
     this._fireStoreRepository,
   );
 
-  Future<UserModel> execute({
+  Future<UserModel?> execute({
     required String email,
     required String password,
   }) async {
