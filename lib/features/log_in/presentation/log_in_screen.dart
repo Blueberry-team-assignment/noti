@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/data/local_storage/shared_preferences_provider.dart';
-import 'package:noti_flutter/features/flow/flow_screen.dart';
-import 'package:noti_flutter/features/log_in/domain/check_user_service.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 import 'package:noti_flutter/talker.dart';
 
@@ -23,7 +21,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
   Widget build(BuildContext context) {
     final userState = ref.watch(userNotifierProvider);
     final userNotifier = ref.read(userNotifierProvider.notifier);
-    final sharedPrefs = ref.watch(sharedPreferencesProvider);
+    final sharedPrefs = ref.watch(sharedPreferencesProvider); // test용
 
     // 이게 최선인지 모르겠어요
     ref.listen(userNotifierProvider, (prev, next) {

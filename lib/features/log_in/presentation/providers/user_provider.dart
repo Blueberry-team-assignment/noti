@@ -3,6 +3,7 @@ import 'package:noti_flutter/features/log_in/domain/check_user_service.dart';
 import 'package:noti_flutter/features/log_in/domain/log_in_usecase.dart';
 import 'package:noti_flutter/features/log_in/domain/start_guest_user_service.dart';
 import 'package:noti_flutter/models/user_model.dart';
+import 'package:noti_flutter/talker.dart';
 
 final userNotifierProvider =
     StateNotifierProvider<UserNotifier, UserState>((ref) {
@@ -22,6 +23,7 @@ class UserNotifier extends StateNotifier<UserState> {
     this._checkUserService,
     this._startGuestUserService,
   ) : super(UserState()) {
+    talkerInfo("use_provider", "init user info");
     checkUserState();
   }
 

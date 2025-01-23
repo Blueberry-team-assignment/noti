@@ -43,6 +43,7 @@ class CheckUserService {
   Future<UserModel?> _checkAuthUser() async {
     final currentUser = await _authRepository.checkUser();
     if (currentUser == null) {
+      talkerInfo("check_user_service", "로그인 되어있는 유저가 존재하지 않아요");
       return null;
     }
 
