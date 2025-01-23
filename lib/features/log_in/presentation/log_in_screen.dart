@@ -31,122 +31,107 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
       }
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("로그인"),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: 20,
-          ),
+    return Column(
+      children: [
+        Form(
+          key: formKey,
           child: Column(
+            spacing: 20,
             children: [
-              Form(
-                key: formKey,
-                child: Column(
-                  spacing: 20,
-                  children: [
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: "이메일",
-                        hintText: "이메일을 입력해주세요",
-                      ),
-                      controller: _emailController,
-                    ),
-                    TextFormField(
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: "비밀번호",
-                        hintText: "비밀번호를 입력해주세요",
-                      ),
-                      controller: _passwordController,
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        try {
-                          if (formKey.currentState!.validate()) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('로그인 중입니다...')),
-                              );
-                            }
-
-                            await userNotifier.login(
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                            );
-
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('로그인 되었습니다.'),
-                                  backgroundColor: Colors.green,
-                                ),
-                              );
-                            }
-                          }
-                        } catch (e) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.toString()),
-                                backgroundColor: Colors.red,
-                                duration: const Duration(seconds: 20),
-                                action: SnackBarAction(
-                                  label: '닫기',
-                                  textColor: Colors.white,
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                  },
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      },
-                      child: userState.isLoading
-                          ? const CircularProgressIndicator()
-                          : const Text('LogIn'),
-                    ),
-                  ],
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: "이메일",
+                  hintText: "이메일을 입력해주세요",
                 ),
+                controller: _emailController,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      userNotifier.startGuestUser();
-                    },
-                    child: const Text("비회원으로 시작하기"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.push('/sign_up');
-                    },
-                    child: const Text("회원가입"),
-                  ),
-                ],
+              TextFormField(
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: "비밀번호",
+                  hintText: "비밀번호를 입력해주세요",
+                ),
+                controller: _passwordController,
               ),
               ElevatedButton(
                 onPressed: () async {
-                  final uid = await sharedPrefs.getString("uid");
-                  talkerLog("test screen", "guest uid : ${uid.toString()}");
+                  try {
+                    if (formKey.currentState!.validate()) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('로그인 중입니다...')),
+                        );
+                      }
+
+                      await userNotifier.login(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      );
+
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('로그인 되었습니다.'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(e.toString()),
+                          backgroundColor: Colors.red,
+                          duration: const Duration(seconds: 20),
+                          action: SnackBarAction(
+                            label: '닫기',
+                            textColor: Colors.white,
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                  }
                 },
-                child: const Text("uid 프린트해보기"),
+                child: userState.isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('LogIn'),
               ),
             ],
           ),
         ),
-      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                userNotifier.startGuestUser();
+              },
+              child: const Text("비회원으로 시작하기"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.push('/sign_up');
+              },
+              child: const Text("회원가입"),
+            ),
+          ],
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            final uid = await sharedPrefs.getString("uid");
+            talkerLog("test screen", "guest uid : ${uid.toString()}");
+          },
+          child: const Text("uid 프린트해보기"),
+        ),
+      ],
     );
   }
 }

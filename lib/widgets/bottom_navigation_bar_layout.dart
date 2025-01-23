@@ -3,15 +3,21 @@ import 'package:noti_flutter/router/go_router.dart';
 
 class BottomNavigationBarLayout extends StatelessWidget {
   final Widget child;
+  final String? title;
 
   const BottomNavigationBarLayout({
     super.key,
     required this.child,
+    this.title,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(title ?? ""),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 10,
