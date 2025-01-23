@@ -109,6 +109,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     try {
                       if (formKey.currentState!.validate()) {
                         if (context.mounted) {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('회원가입이 진행 중입니다...')),
                           );

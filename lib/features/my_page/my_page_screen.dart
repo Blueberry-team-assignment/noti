@@ -30,7 +30,8 @@ class MyPageScreen extends ConsumerWidget {
             onPressed: () async {
               try {
                 await myPageNotifier.logout();
-                userNotifier.resetUserState();
+                userNotifier
+                    .resetUserState(); // 이걸 하지 않으면 login state에 user가 남아 있음
               } catch (e) {}
             },
             child: const Text("logout")),

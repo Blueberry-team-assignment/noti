@@ -67,11 +67,13 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                       onPressed: () async {
                         try {
                           if (formKey.currentState!.validate()) {
-                            // if (context.mounted) {
-                            //   ScaffoldMessenger.of(context).showSnackBar(
-                            //     const SnackBar(content: Text('로그인 중입니다...')),
-                            //   );
-                            // }
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('로그인 중입니다...')),
+                              );
+                            }
 
                             await userNotifier.login(
                               email: _emailController.text,
