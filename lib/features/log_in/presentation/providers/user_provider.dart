@@ -23,7 +23,6 @@ class UserNotifier extends StateNotifier<UserState> {
     this._checkUserService,
     this._startGuestUserService,
   ) : super(UserState()) {
-    talkerInfo("use_provider", "init user info");
     checkUserState();
   }
 
@@ -53,7 +52,6 @@ class UserNotifier extends StateNotifier<UserState> {
       state = UserState(user: user);
     } catch (e) {
       setLoading(false);
-      // rethrow;
     }
   }
 

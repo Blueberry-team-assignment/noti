@@ -109,9 +109,13 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User?> checkUser() async {
-    User? user = _firebaseAuth.currentUser;
-    if (user == null) throw Exception('User not found');
-    return user;
+    try {
+      User? user = _firebaseAuth.currentUser;
+      if (user == null) throw Exception('User not found');
+      return user;
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   @override

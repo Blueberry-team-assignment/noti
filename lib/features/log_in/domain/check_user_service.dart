@@ -26,33 +26,41 @@ class CheckUserService {
   );
 
   Future<UserModel?> _checkGuestUser() async {
-    // 비회원으로 로그인한적 있다면, sharedPreferences에 uid 저장되어 있음.
-    final guestUid = await _sharedPreferencesAsync.getString("uid");
-    if (guestUid == null) {
-      talkerInfo("checkUserService", "stored guest uid is not found");
+    try {
+      // 비회원으로 로그인한적 있다면, sharedPreferences에 uid 저장되어 있음.
+      final guestUid = await _sharedPreferencesAsync.getString("uid");
+      if (guestUid == null) {
+        talkerInfo("checkUserService", "stored guest uid is not found");
+        return null;
+      }
+
+      final guest =
+          await _fireStoreRepository.fetchUserFromFireStore(uid: guestUid);
+
+      talkerInfo("checkUserService", "guest logged In : ${guest.toString()}");
+      return guest;
+    } catch (e) {
       return null;
     }
-
-    final guest =
-        await _fireStoreRepository.fetchUserFromFireStore(uid: guestUid);
-
-    talkerInfo("checkUserService", "guest logged In : ${guest.toString()}");
-    return guest;
   }
 
   Future<UserModel?> _checkAuthUser() async {
-    final currentUser = await _authRepository.checkUser();
-    if (currentUser == null) {
-      talkerInfo("check_user_service", "로그인 되어있는 유저가 존재하지 않아요");
+    try {
+      final currentUser = await _authRepository.checkUser();
+      if (currentUser == null) {
+        talkerInfo("check_user_service", "로그인 되어있는 유저가 존재하지 않아요");
+        return null;
+      }
+
+      final authUser = await _fireStoreRepository.fetchUserFromFireStore(
+          uid: currentUser.uid);
+
+      talkerInfo(
+          "checkUserService", "authUser logged In : ${authUser.toString()}");
+      return authUser;
+    } catch (e) {
       return null;
     }
-
-    final authUser =
-        await _fireStoreRepository.fetchUserFromFireStore(uid: currentUser.uid);
-
-    talkerInfo(
-        "checkUserService", "authUser logged In : ${authUser.toString()}");
-    return authUser;
   }
 
   Future<UserModel?> checkUser() async {
