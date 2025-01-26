@@ -24,7 +24,8 @@ mixin _$FlowDto {
   String? get name => throw _privateConstructorUsedError;
   String? get category => throw _privateConstructorUsedError;
   Duration? get duration => throw _privateConstructorUsedError;
-  String? get ratio => throw _privateConstructorUsedError;
+  Duration? get focusTime => throw _privateConstructorUsedError;
+  Duration? get restTime => throw _privateConstructorUsedError;
   String? get desc => throw _privateConstructorUsedError;
 
   /// Serializes this FlowDto to a JSON map.
@@ -46,7 +47,8 @@ abstract class $FlowDtoCopyWith<$Res> {
       String? name,
       String? category,
       Duration? duration,
-      String? ratio,
+      Duration? focusTime,
+      Duration? restTime,
       String? desc});
 }
 
@@ -69,7 +71,8 @@ class _$FlowDtoCopyWithImpl<$Res, $Val extends FlowDto>
     Object? name = freezed,
     Object? category = freezed,
     Object? duration = freezed,
-    Object? ratio = freezed,
+    Object? focusTime = freezed,
+    Object? restTime = freezed,
     Object? desc = freezed,
   }) {
     return _then(_value.copyWith(
@@ -89,10 +92,14 @@ class _$FlowDtoCopyWithImpl<$Res, $Val extends FlowDto>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as Duration?,
-      ratio: freezed == ratio
-          ? _value.ratio
-          : ratio // ignore: cast_nullable_to_non_nullable
-              as String?,
+      focusTime: freezed == focusTime
+          ? _value.focusTime
+          : focusTime // ignore: cast_nullable_to_non_nullable
+              as Duration?,
+      restTime: freezed == restTime
+          ? _value.restTime
+          : restTime // ignore: cast_nullable_to_non_nullable
+              as Duration?,
       desc: freezed == desc
           ? _value.desc
           : desc // ignore: cast_nullable_to_non_nullable
@@ -113,7 +120,8 @@ abstract class _$$FlowDtoImplCopyWith<$Res> implements $FlowDtoCopyWith<$Res> {
       String? name,
       String? category,
       Duration? duration,
-      String? ratio,
+      Duration? focusTime,
+      Duration? restTime,
       String? desc});
 }
 
@@ -134,7 +142,8 @@ class __$$FlowDtoImplCopyWithImpl<$Res>
     Object? name = freezed,
     Object? category = freezed,
     Object? duration = freezed,
-    Object? ratio = freezed,
+    Object? focusTime = freezed,
+    Object? restTime = freezed,
     Object? desc = freezed,
   }) {
     return _then(_$FlowDtoImpl(
@@ -154,10 +163,14 @@ class __$$FlowDtoImplCopyWithImpl<$Res>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as Duration?,
-      ratio: freezed == ratio
-          ? _value.ratio
-          : ratio // ignore: cast_nullable_to_non_nullable
-              as String?,
+      focusTime: freezed == focusTime
+          ? _value.focusTime
+          : focusTime // ignore: cast_nullable_to_non_nullable
+              as Duration?,
+      restTime: freezed == restTime
+          ? _value.restTime
+          : restTime // ignore: cast_nullable_to_non_nullable
+              as Duration?,
       desc: freezed == desc
           ? _value.desc
           : desc // ignore: cast_nullable_to_non_nullable
@@ -174,7 +187,8 @@ class _$FlowDtoImpl implements _FlowDto {
       this.name,
       this.category,
       this.duration,
-      this.ratio,
+      this.focusTime,
+      this.restTime,
       this.desc});
 
   factory _$FlowDtoImpl.fromJson(Map<String, dynamic> json) =>
@@ -189,13 +203,15 @@ class _$FlowDtoImpl implements _FlowDto {
   @override
   final Duration? duration;
   @override
-  final String? ratio;
+  final Duration? focusTime;
+  @override
+  final Duration? restTime;
   @override
   final String? desc;
 
   @override
   String toString() {
-    return 'FlowDto(id: $id, name: $name, category: $category, duration: $duration, ratio: $ratio, desc: $desc)';
+    return 'FlowDto(id: $id, name: $name, category: $category, duration: $duration, focusTime: $focusTime, restTime: $restTime, desc: $desc)';
   }
 
   @override
@@ -209,14 +225,17 @@ class _$FlowDtoImpl implements _FlowDto {
                 other.category == category) &&
             (identical(other.duration, duration) ||
                 other.duration == duration) &&
-            (identical(other.ratio, ratio) || other.ratio == ratio) &&
+            (identical(other.focusTime, focusTime) ||
+                other.focusTime == focusTime) &&
+            (identical(other.restTime, restTime) ||
+                other.restTime == restTime) &&
             (identical(other.desc, desc) || other.desc == desc));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, category, duration, ratio, desc);
+  int get hashCode => Object.hash(
+      runtimeType, id, name, category, duration, focusTime, restTime, desc);
 
   /// Create a copy of FlowDto
   /// with the given fields replaced by the non-null parameter values.
@@ -240,7 +259,8 @@ abstract class _FlowDto implements FlowDto {
       final String? name,
       final String? category,
       final Duration? duration,
-      final String? ratio,
+      final Duration? focusTime,
+      final Duration? restTime,
       final String? desc}) = _$FlowDtoImpl;
 
   factory _FlowDto.fromJson(Map<String, dynamic> json) = _$FlowDtoImpl.fromJson;
@@ -254,7 +274,9 @@ abstract class _FlowDto implements FlowDto {
   @override
   Duration? get duration;
   @override
-  String? get ratio;
+  Duration? get focusTime;
+  @override
+  Duration? get restTime;
   @override
   String? get desc;
 

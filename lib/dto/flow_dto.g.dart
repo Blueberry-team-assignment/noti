@@ -14,7 +14,12 @@ _$FlowDtoImpl _$$FlowDtoImplFromJson(Map<String, dynamic> json) =>
       duration: json['duration'] == null
           ? null
           : Duration(microseconds: (json['duration'] as num).toInt()),
-      ratio: json['ratio'] as String?,
+      focusTime: json['focusTime'] == null
+          ? null
+          : Duration(microseconds: (json['focusTime'] as num).toInt()),
+      restTime: json['restTime'] == null
+          ? null
+          : Duration(microseconds: (json['restTime'] as num).toInt()),
       desc: json['desc'] as String?,
     );
 
@@ -24,6 +29,7 @@ Map<String, dynamic> _$$FlowDtoImplToJson(_$FlowDtoImpl instance) =>
       'name': instance.name,
       'category': instance.category,
       'duration': instance.duration?.inMicroseconds,
-      'ratio': instance.ratio,
+      'focusTime': instance.focusTime?.inMicroseconds,
+      'restTime': instance.restTime?.inMicroseconds,
       'desc': instance.desc,
     };

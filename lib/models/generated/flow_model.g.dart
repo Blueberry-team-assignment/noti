@@ -12,7 +12,8 @@ _$FlowModelImpl _$$FlowModelImplFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       category: json['category'] as String,
       duration: Duration(microseconds: (json['duration'] as num).toInt()),
-      ratio: json['ratio'] as String,
+      focusTime: Duration(microseconds: (json['focusTime'] as num).toInt()),
+      restTime: Duration(microseconds: (json['restTime'] as num).toInt()),
       desc: json['desc'] as String? ?? "",
     );
 
@@ -22,6 +23,7 @@ Map<String, dynamic> _$$FlowModelImplToJson(_$FlowModelImpl instance) =>
       'name': instance.name,
       'category': instance.category,
       'duration': instance.duration.inMicroseconds,
-      'ratio': instance.ratio,
+      'focusTime': instance.focusTime.inMicroseconds,
+      'restTime': instance.restTime.inMicroseconds,
       'desc': instance.desc,
     };

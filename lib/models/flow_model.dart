@@ -10,7 +10,8 @@ class FlowModel with _$FlowModel {
     required String name,
     required String category,
     required Duration duration, // 1 플로우의 총 시간
-    required String ratio, // 몰입-휴식 비율
+    required Duration focusTime,
+    required Duration restTime,
     @Default("") String desc,
   }) = _FlowModel;
 

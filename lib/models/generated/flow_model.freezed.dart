@@ -24,7 +24,8 @@ mixin _$FlowModel {
   String get name => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
   Duration get duration => throw _privateConstructorUsedError; // 1 플로우의 총 시간
-  String get ratio => throw _privateConstructorUsedError; // 몰입-휴식 비율
+  Duration get focusTime => throw _privateConstructorUsedError;
+  Duration get restTime => throw _privateConstructorUsedError;
   String get desc => throw _privateConstructorUsedError;
 
   /// Serializes this FlowModel to a JSON map.
@@ -47,7 +48,8 @@ abstract class $FlowModelCopyWith<$Res> {
       String name,
       String category,
       Duration duration,
-      String ratio,
+      Duration focusTime,
+      Duration restTime,
       String desc});
 }
 
@@ -70,7 +72,8 @@ class _$FlowModelCopyWithImpl<$Res, $Val extends FlowModel>
     Object? name = null,
     Object? category = null,
     Object? duration = null,
-    Object? ratio = null,
+    Object? focusTime = null,
+    Object? restTime = null,
     Object? desc = null,
   }) {
     return _then(_value.copyWith(
@@ -90,10 +93,14 @@ class _$FlowModelCopyWithImpl<$Res, $Val extends FlowModel>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as Duration,
-      ratio: null == ratio
-          ? _value.ratio
-          : ratio // ignore: cast_nullable_to_non_nullable
-              as String,
+      focusTime: null == focusTime
+          ? _value.focusTime
+          : focusTime // ignore: cast_nullable_to_non_nullable
+              as Duration,
+      restTime: null == restTime
+          ? _value.restTime
+          : restTime // ignore: cast_nullable_to_non_nullable
+              as Duration,
       desc: null == desc
           ? _value.desc
           : desc // ignore: cast_nullable_to_non_nullable
@@ -115,7 +122,8 @@ abstract class _$$FlowModelImplCopyWith<$Res>
       String name,
       String category,
       Duration duration,
-      String ratio,
+      Duration focusTime,
+      Duration restTime,
       String desc});
 }
 
@@ -136,7 +144,8 @@ class __$$FlowModelImplCopyWithImpl<$Res>
     Object? name = null,
     Object? category = null,
     Object? duration = null,
-    Object? ratio = null,
+    Object? focusTime = null,
+    Object? restTime = null,
     Object? desc = null,
   }) {
     return _then(_$FlowModelImpl(
@@ -156,10 +165,14 @@ class __$$FlowModelImplCopyWithImpl<$Res>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as Duration,
-      ratio: null == ratio
-          ? _value.ratio
-          : ratio // ignore: cast_nullable_to_non_nullable
-              as String,
+      focusTime: null == focusTime
+          ? _value.focusTime
+          : focusTime // ignore: cast_nullable_to_non_nullable
+              as Duration,
+      restTime: null == restTime
+          ? _value.restTime
+          : restTime // ignore: cast_nullable_to_non_nullable
+              as Duration,
       desc: null == desc
           ? _value.desc
           : desc // ignore: cast_nullable_to_non_nullable
@@ -176,7 +189,8 @@ class _$FlowModelImpl implements _FlowModel {
       required this.name,
       required this.category,
       required this.duration,
-      required this.ratio,
+      required this.focusTime,
+      required this.restTime,
       this.desc = ""});
 
   factory _$FlowModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -192,15 +206,16 @@ class _$FlowModelImpl implements _FlowModel {
   final Duration duration;
 // 1 플로우의 총 시간
   @override
-  final String ratio;
-// 몰입-휴식 비율
+  final Duration focusTime;
+  @override
+  final Duration restTime;
   @override
   @JsonKey()
   final String desc;
 
   @override
   String toString() {
-    return 'FlowModel(id: $id, name: $name, category: $category, duration: $duration, ratio: $ratio, desc: $desc)';
+    return 'FlowModel(id: $id, name: $name, category: $category, duration: $duration, focusTime: $focusTime, restTime: $restTime, desc: $desc)';
   }
 
   @override
@@ -214,14 +229,17 @@ class _$FlowModelImpl implements _FlowModel {
                 other.category == category) &&
             (identical(other.duration, duration) ||
                 other.duration == duration) &&
-            (identical(other.ratio, ratio) || other.ratio == ratio) &&
+            (identical(other.focusTime, focusTime) ||
+                other.focusTime == focusTime) &&
+            (identical(other.restTime, restTime) ||
+                other.restTime == restTime) &&
             (identical(other.desc, desc) || other.desc == desc));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, category, duration, ratio, desc);
+  int get hashCode => Object.hash(
+      runtimeType, id, name, category, duration, focusTime, restTime, desc);
 
   /// Create a copy of FlowModel
   /// with the given fields replaced by the non-null parameter values.
@@ -245,7 +263,8 @@ abstract class _FlowModel implements FlowModel {
       required final String name,
       required final String category,
       required final Duration duration,
-      required final String ratio,
+      required final Duration focusTime,
+      required final Duration restTime,
       final String desc}) = _$FlowModelImpl;
 
   factory _FlowModel.fromJson(Map<String, dynamic> json) =
@@ -260,7 +279,9 @@ abstract class _FlowModel implements FlowModel {
   @override
   Duration get duration; // 1 플로우의 총 시간
   @override
-  String get ratio; // 몰입-휴식 비율
+  Duration get focusTime;
+  @override
+  Duration get restTime;
   @override
   String get desc;
 

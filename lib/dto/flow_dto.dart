@@ -10,7 +10,8 @@ class FlowDto with _$FlowDto {
     String? name,
     String? category,
     Duration? duration,
-    String? ratio,
+    Duration? focusTime,
+    Duration? restTime,
     String? desc,
   }) = _FlowDto;
 
