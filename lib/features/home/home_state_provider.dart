@@ -20,11 +20,11 @@ class HomeStateNotifier extends StateNotifier<HomeState> {
       if (uid == null) {
         throw Exception("uid not found");
       }
-      // state = state.copyWith(isLoading: true);
+      state = state.copyWith(isLoading: true);
 
       final flowList = await _flowRepository.getFlowList(uid: uid);
 
-      // state = state.copyWith(flowList: flowList);
+      state = state.copyWith(flowList: flowList, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
       rethrow;
