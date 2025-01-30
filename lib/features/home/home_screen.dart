@@ -19,7 +19,18 @@ class HomeScreen extends ConsumerWidget {
         final flowList = homeState.flowList;
 
         if (flowList == null || flowList.isEmpty) {
-          return const Text("아직 등록된 플로우가 없어요");
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Text("아직 등록된 플로우가 없어요"),
+              ElevatedButton(
+                onPressed: () {
+                  context.push("/flow_register");
+                },
+                child: const Text('flow 생성'),
+              ),
+            ],
+          );
         }
 
         return Column(

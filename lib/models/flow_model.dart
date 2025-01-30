@@ -8,8 +8,8 @@ class FlowModel with _$FlowModel {
   const factory FlowModel({
     required String id,
     required String name,
-    required String category,
-    required Duration duration, // 1 플로우의 총 시간
+    String? category,
+    Duration? duration, // 1 플로우의 총 시간
     required Duration focusTime,
     required Duration restTime,
     @Default("") String desc,

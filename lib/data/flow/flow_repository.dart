@@ -48,6 +48,13 @@ class FlowRepositoryImpl implements FlowRepository {
       if (flowList.docs.isEmpty) {
         return [];
       }
+      talkerInfo(
+          "flowRepository(getFlowList)",
+          "fetched flow List : ${flowList.docs.map((doc) {
+            final data = doc.data();
+            data['id'] = doc.id;
+            return FlowModel.fromJson(data);
+          }).toList()}");
 
       return flowList.docs.map((doc) {
         final data = doc.data();

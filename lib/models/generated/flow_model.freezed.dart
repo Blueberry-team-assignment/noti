@@ -22,8 +22,8 @@ FlowModel _$FlowModelFromJson(Map<String, dynamic> json) {
 mixin _$FlowModel {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get category => throw _privateConstructorUsedError;
-  Duration get duration => throw _privateConstructorUsedError; // 1 플로우의 총 시간
+  String? get category => throw _privateConstructorUsedError;
+  Duration? get duration => throw _privateConstructorUsedError; // 1 플로우의 총 시간
   Duration get focusTime => throw _privateConstructorUsedError;
   Duration get restTime => throw _privateConstructorUsedError;
   String get desc => throw _privateConstructorUsedError;
@@ -46,8 +46,8 @@ abstract class $FlowModelCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
-      String category,
-      Duration duration,
+      String? category,
+      Duration? duration,
       Duration focusTime,
       Duration restTime,
       String desc});
@@ -70,8 +70,8 @@ class _$FlowModelCopyWithImpl<$Res, $Val extends FlowModel>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? category = null,
-    Object? duration = null,
+    Object? category = freezed,
+    Object? duration = freezed,
     Object? focusTime = null,
     Object? restTime = null,
     Object? desc = null,
@@ -85,14 +85,14 @@ class _$FlowModelCopyWithImpl<$Res, $Val extends FlowModel>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      category: null == category
+      category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as String,
-      duration: null == duration
+              as String?,
+      duration: freezed == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
-              as Duration,
+              as Duration?,
       focusTime: null == focusTime
           ? _value.focusTime
           : focusTime // ignore: cast_nullable_to_non_nullable
@@ -120,8 +120,8 @@ abstract class _$$FlowModelImplCopyWith<$Res>
   $Res call(
       {String id,
       String name,
-      String category,
-      Duration duration,
+      String? category,
+      Duration? duration,
       Duration focusTime,
       Duration restTime,
       String desc});
@@ -142,8 +142,8 @@ class __$$FlowModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? category = null,
-    Object? duration = null,
+    Object? category = freezed,
+    Object? duration = freezed,
     Object? focusTime = null,
     Object? restTime = null,
     Object? desc = null,
@@ -157,14 +157,14 @@ class __$$FlowModelImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      category: null == category
+      category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as String,
-      duration: null == duration
+              as String?,
+      duration: freezed == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
-              as Duration,
+              as Duration?,
       focusTime: null == focusTime
           ? _value.focusTime
           : focusTime // ignore: cast_nullable_to_non_nullable
@@ -187,8 +187,8 @@ class _$FlowModelImpl implements _FlowModel {
   const _$FlowModelImpl(
       {required this.id,
       required this.name,
-      required this.category,
-      required this.duration,
+      this.category,
+      this.duration,
       required this.focusTime,
       required this.restTime,
       this.desc = ""});
@@ -201,9 +201,9 @@ class _$FlowModelImpl implements _FlowModel {
   @override
   final String name;
   @override
-  final String category;
+  final String? category;
   @override
-  final Duration duration;
+  final Duration? duration;
 // 1 플로우의 총 시간
   @override
   final Duration focusTime;
@@ -261,8 +261,8 @@ abstract class _FlowModel implements FlowModel {
   const factory _FlowModel(
       {required final String id,
       required final String name,
-      required final String category,
-      required final Duration duration,
+      final String? category,
+      final Duration? duration,
       required final Duration focusTime,
       required final Duration restTime,
       final String desc}) = _$FlowModelImpl;
@@ -275,9 +275,9 @@ abstract class _FlowModel implements FlowModel {
   @override
   String get name;
   @override
-  String get category;
+  String? get category;
   @override
-  Duration get duration; // 1 플로우의 총 시간
+  Duration? get duration; // 1 플로우의 총 시간
   @override
   Duration get focusTime;
   @override

@@ -24,7 +24,7 @@ class HomeStateNotifier extends StateNotifier<HomeState> {
 
       final flowList = await _flowRepository.getFlowList(uid: uid);
 
-      state = state.copyWith(flowList: flowList);
+      // state = state.copyWith(flowList: flowList);
     } catch (e) {
       state = state.copyWith(isLoading: false);
       rethrow;
