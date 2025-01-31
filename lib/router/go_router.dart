@@ -24,7 +24,7 @@ final router = GoRouter(
         GoRoute(
           path: '/flow',
           pageBuilder: (BuildContext context, GoRouterState state) =>
-              const NoTransitionPage(
+              NoTransitionPage(
             child: FlowScreen(),
           ),
         ),

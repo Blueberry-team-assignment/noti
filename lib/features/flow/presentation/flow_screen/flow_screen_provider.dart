@@ -19,27 +19,36 @@ class FlowScreenNotifier extends StateNotifier<FlowState> {
   void setFlowInfo(FlowModel flow) {
     state = state.copyWith(flow: flow);
   }
+
+  Duration updateRemainingTime({
+    required Duration timeLimit,
+    required Duration elapsedTime,
+  }) {
+    state = state.copyWith(remainingTime: timeLimit - elapsedTime);
+
+    return state.remainingTime;
+  }
 }
 
 class FlowState {
   FlowModel? flow;
-  Duration elapsedTime;
+  Duration remainingTime;
   bool isLoading;
 
   FlowState({
     this.flow,
-    this.elapsedTime = Duration.zero,
+    this.remainingTime = Duration.zero,
     this.isLoading = false,
   });
 
   FlowState copyWith({
     FlowModel? flow,
-    Duration? elapsedTime,
+    Duration? remainingTime,
     bool? isLoading,
   }) {
     return FlowState(
       flow: flow ?? this.flow,
-      elapsedTime: elapsedTime ?? this.elapsedTime,
+      remainingTime: remainingTime ?? this.remainingTime,
       isLoading: isLoading ?? this.isLoading,
     );
   }
