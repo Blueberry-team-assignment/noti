@@ -19,7 +19,7 @@ abstract class AuthRepository {
     required SignUpDto signUpDto,
   });
 
-  Future<User?> checkUser();
+  User? checkUser();
 
   Future<void> logOut();
 }
@@ -108,7 +108,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User?> checkUser() async {
+  User? checkUser() {
     try {
       User? user = _firebaseAuth.currentUser;
       if (user == null) throw Exception('User not found');

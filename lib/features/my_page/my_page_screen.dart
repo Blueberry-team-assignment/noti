@@ -9,7 +9,6 @@ class MyPageScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 맞는지 모르겠읍니다
     final userState = ref.watch(userNotifierProvider);
     final userNotifier = ref.watch(userNotifierProvider.notifier);
     final myPageState = ref.watch(myPageNotifierProvider(userState));

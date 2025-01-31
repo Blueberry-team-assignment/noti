@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:noti_flutter/data/auth/auth_repository.dart';
 import 'package:noti_flutter/data/flow/flow_repository.dart';
 import 'package:noti_flutter/models/flow_model.dart';
 
@@ -17,8 +18,8 @@ class HomeStateNotifier extends StateNotifier<HomeState> {
 
   Future<void> loadFlowList({required String? uid}) async {
     try {
-      if (uid == null) {
-        throw Exception("uid not found");
+      if (uid == null || uid == "") {
+        throw Exception("uid not found yet");
       }
       state = state.copyWith(isLoading: true);
 

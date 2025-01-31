@@ -46,7 +46,8 @@ class CheckUserService {
 
   Future<UserModel?> _checkAuthUser() async {
     try {
-      final currentUser = await _authRepository.checkUser();
+      final currentUser = _authRepository.checkUser();
+
       if (currentUser == null) {
         talkerInfo("check_user_service", "로그인 되어있는 유저가 존재하지 않아요");
         return null;
@@ -66,6 +67,7 @@ class CheckUserService {
   Future<UserModel?> checkUser() async {
     try {
       final authUser = await _checkAuthUser();
+
       if (authUser == null) {
         return await _checkGuestUser();
       }
