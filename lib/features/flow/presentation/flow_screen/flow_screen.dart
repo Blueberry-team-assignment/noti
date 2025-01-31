@@ -11,38 +11,46 @@ class FlowScreen extends ConsumerStatefulWidget {
 }
 
 class _FlowScreenState extends ConsumerState<FlowScreen> {
-  int _seconds = 0;
-  bool _isRunning = false;
+  int elapsedSeconds = 0;
+  bool isRunning = false;
+  bool isFocusTime = true;
   late Timer _timer;
 
-  void _startTimer() {
+  void startTimer() {
     setState(() {
-      _isRunning = true;
+      isRunning = true;
     });
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        _seconds++;
+        final flowState = ref.read(flowScreenProvider).flow;
+        if (flowState != null &&
+            elapsedSeconds >= flowState.focusTime.inSeconds) {
+          isFocusTime = false;
+          stopTimer();
+          return;
+        }
+
+        elapsedSeconds++;
       });
     });
   }
 
-  void _stopTimer() {
+  void stopTimer() {
     setState(() {
-      _isRunning = false;
+      isRunning = false;
     });
     _timer.cancel();
   }
 
-  void _resetTimer() {
+  void resetTimer() {
     setState(() {
-      _seconds = 0;
+      elapsedSeconds = 0;
     });
   }
 
-  void _finishTimer() {
-    _stopTimer();
+  void finishTimer() {
     setState(() {
-      _seconds = 30 * 60;
+      elapsedSeconds = 30 * 60;
     });
   }
 
@@ -50,36 +58,41 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
   Widget build(BuildContext context) {
     final flowState = ref.watch(flowScreenProvider).flow;
 
-    final int minutes = (flowState!.focusTime.inSeconds - _seconds) ~/ 60;
-    final int seconds = (flowState.focusTime.inSeconds - _seconds) % 60;
+    final int focusMinutes =
+        (flowState!.focusTime.inSeconds - elapsedSeconds) ~/ 60;
+    final int focusSeconds = focusMinutes > 0
+        ? (flowState.focusTime.inSeconds - elapsedSeconds) % 60
+        : 0;
     final remainingTime =
-        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+        '${focusMinutes.toString().padLeft(2, '0')}:${focusSeconds.toString().padLeft(2, '0')}';
+
     return Scaffold(
       body: Center(
         child: Column(
           spacing: 16,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(isFocusTime ? "몰입" : "휴식"),
             Text(remainingTime, style: const TextStyle(fontSize: 72)),
-            Text('$_seconds', style: const TextStyle(fontSize: 16)),
+            Text('$elapsedSeconds', style: const TextStyle(fontSize: 16)),
             Row(
               spacing: 16,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: _isRunning ? null : _startTimer,
+                  onPressed: isRunning ? null : startTimer,
                   child: const Text('Start'),
                 ),
                 ElevatedButton(
-                  onPressed: _isRunning ? _stopTimer : null,
+                  onPressed: isRunning ? stopTimer : null,
                   child: const Text('Stop'),
                 ),
                 ElevatedButton(
-                  onPressed: _resetTimer,
+                  onPressed: resetTimer,
                   child: const Text('Reset'),
                 ),
                 ElevatedButton(
-                  onPressed: _finishTimer,
+                  onPressed: finishTimer,
                   child: const Text('finish'),
                 ),
               ],
