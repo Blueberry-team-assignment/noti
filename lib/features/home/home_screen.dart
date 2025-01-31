@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/data/auth/auth_repository.dart';
 import 'package:noti_flutter/data/flow/flow_repository.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 import 'package:noti_flutter/models/flow_model.dart';
@@ -29,7 +28,7 @@ class HomeScreen extends ConsumerWidget {
               const Text("아직 등록된 플로우가 없어요"),
               ElevatedButton(
                 onPressed: () {
-                  context.push("/flow_register");
+                  context.pushReplacement("/flow_register");
                 },
                 child: const Text('flow 생성'),
               ),
