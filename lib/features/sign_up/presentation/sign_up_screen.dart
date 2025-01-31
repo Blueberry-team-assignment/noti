@@ -149,6 +149,12 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 ? const CircularProgressIndicator()
                 : const Text('Submit'),
           ),
+          ElevatedButton(
+            onPressed: () {
+              context.pushReplacement('/log_in');
+            },
+            child: const Text("돌아가기"),
+          )
         ],
       ),
     );

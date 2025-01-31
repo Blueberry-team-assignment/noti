@@ -3,6 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/dto/sign_up_dto.dart';
 import 'package:noti_flutter/talker.dart';
 
+final authRepositoryProvider = Provider((ref) {
+  final firebaseAuth = FirebaseAuth.instance;
+
+  return AuthRepositoryImpl(firebaseAuth);
+});
+
 abstract class AuthRepository {
   Future<User> logIn({
     required String email,
@@ -13,16 +19,10 @@ abstract class AuthRepository {
     required SignUpDto signUpDto,
   });
 
-  Future<User?> checkUser();
+  User? checkUser();
 
   Future<void> logOut();
 }
-
-final authRepositoryProvider = Provider((ref) {
-  final firebaseAuth = FirebaseAuth.instance;
-
-  return AuthRepositoryImpl(firebaseAuth);
-});
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _firebaseAuth;
@@ -108,7 +108,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User?> checkUser() async {
+  User? checkUser() {
     try {
       User? user = _firebaseAuth.currentUser;
       if (user == null) throw Exception('User not found');

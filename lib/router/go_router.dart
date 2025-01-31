@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/log_in/presentation/log_in_screen.dart';
+import 'package:noti_flutter/features/register_flow/register_flow_screen.dart';
 import 'package:noti_flutter/features/sign_up/presentation/sign_up_screen.dart';
 import 'package:noti_flutter/features/flow/flow_screen.dart';
 import 'package:noti_flutter/widgets/bottom_navigation_bar_layout.dart';
@@ -54,11 +55,18 @@ final router = GoRouter(
       routes: [
         GoRoute(
           path: '/sign_up',
-          builder: (context, state) => const SignUpScreen(),
+          pageBuilder: (BuildContext context, GoRouterState state) =>
+              const NoTransitionPage(child: SignUpScreen()),
         ),
         GoRoute(
           path: '/log_in',
-          builder: (context, state) => const LogInScreen(),
+          pageBuilder: (BuildContext context, GoRouterState state) =>
+              const NoTransitionPage(child: LogInScreen()),
+        ),
+        GoRoute(
+          path: '/flow_register',
+          pageBuilder: (BuildContext context, GoRouterState state) =>
+              const NoTransitionPage(child: RegisterFlowScreen()),
         ),
       ],
     ),

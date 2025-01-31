@@ -4,6 +4,12 @@ import 'package:noti_flutter/dto/sign_up_dto.dart';
 import 'package:noti_flutter/models/user_model.dart';
 import 'package:noti_flutter/talker.dart';
 
+final fireStoreRepositoryProvider = Provider((ref) {
+  final firebaseFirestore = FirebaseFirestore.instance;
+
+  return FireStoreRepositoryImpl(firebaseFirestore);
+});
+
 abstract class FireStoreRepository {
   Future<UserModel?> saveUserToFireStore({
     required String uid,
@@ -14,12 +20,6 @@ abstract class FireStoreRepository {
     required String uid,
   });
 }
-
-final fireStoreRepositoryProvider = Provider((ref) {
-  final firebaseFirestore = FirebaseFirestore.instance;
-
-  return FireStoreRepositoryImpl(firebaseFirestore);
-});
 
 class FireStoreRepositoryImpl implements FireStoreRepository {
   final FirebaseFirestore _firebaseFireStore;
