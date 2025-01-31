@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/dto/flow_dto.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
-import 'package:noti_flutter/features/register_flow/register_flow_provider.dart';
+import 'package:noti_flutter/features/flow/presentation/register_flow/register_flow_provider.dart';
 import 'package:noti_flutter/talker.dart';
 
 class RegisterFlowScreen extends ConsumerStatefulWidget {

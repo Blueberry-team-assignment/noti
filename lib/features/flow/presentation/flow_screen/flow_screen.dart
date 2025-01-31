@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ExecuteFlowScreen extends ConsumerStatefulWidget {
-  const ExecuteFlowScreen({super.key});
+class FlowScreen extends ConsumerStatefulWidget {
+  const FlowScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ExecuteFlowScreenState();
+      _FlowScreenState();
 }
 
-class _ExecuteFlowScreenState extends ConsumerState<ExecuteFlowScreen>
+class _FlowScreenState extends ConsumerState<FlowScreen>
     with SingleTickerProviderStateMixin {
   late final Ticker ticker;
   Duration elapsedTime = Duration.zero;

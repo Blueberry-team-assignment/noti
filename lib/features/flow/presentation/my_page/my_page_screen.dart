@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
-import 'package:noti_flutter/features/my_page/my_page_provider.dart';
+import 'package:noti_flutter/features/flow/presentation/my_page/my_page_provider.dart';
 
 class MyPageScreen extends ConsumerWidget {
   const MyPageScreen({super.key});
