@@ -23,11 +23,22 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         final flowState = ref.read(flowScreenProvider).flow;
-        if (flowState != null &&
-            elapsedSeconds >= flowState.focusTime.inSeconds) {
-          isFocusTime = false;
-          stopTimer();
-          return;
+        if (isFocusTime) {
+          if (flowState != null &&
+              elapsedSeconds >= flowState.focusTime.inSeconds) {
+            isFocusTime = false;
+            stopTimer();
+            resetTimer();
+            return;
+          }
+        } else {
+          if (flowState != null &&
+              elapsedSeconds >= flowState.restTime.inSeconds) {
+            isFocusTime = true;
+            stopTimer();
+            resetTimer();
+            return;
+          }
         }
 
         elapsedSeconds++;
@@ -49,8 +60,11 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
   }
 
   void finishTimer() {
+    final flowState = ref.read(flowScreenProvider).flow;
     setState(() {
-      elapsedSeconds = 30 * 60;
+      elapsedSeconds = isFocusTime
+          ? flowState!.focusTime.inSeconds
+          : flowState!.restTime.inSeconds;
     });
   }
 
@@ -63,8 +77,18 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
     final int focusSeconds = focusMinutes > 0
         ? (flowState.focusTime.inSeconds - elapsedSeconds) % 60
         : 0;
-    final remainingTime =
+    final remainingFocusTime =
         '${focusMinutes.toString().padLeft(2, '0')}:${focusSeconds.toString().padLeft(2, '0')}';
+
+    final int restMinutes =
+        (flowState.restTime.inSeconds - elapsedSeconds) ~/ 60;
+    final int restSeconds = restMinutes > 0
+        ? (flowState.restTime.inSeconds - elapsedSeconds) % 60
+        : 0;
+    final remainingRestTime =
+        '${restMinutes.toString().padLeft(2, '0')}:${restSeconds.toString().padLeft(2, '0')}';
+
+    final remainingTime = isFocusTime ? remainingFocusTime : remainingRestTime;
 
     return Scaffold(
       body: Center(
