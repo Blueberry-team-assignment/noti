@@ -10,7 +10,8 @@ final flowListProvider =
     FutureProvider.autoDispose<List<FlowModel>>((ref) async {
   final user = ref.watch(userNotifierProvider).user;
   final flowRepository = ref.read(flowRepositoryProvider);
-  return await flowRepository.getFlowList(uid: user?.uid ?? "");
+  if (user == null) return [];
+  return await flowRepository.getFlowList(uid: user.uid);
 });
 
 class HomeScreen extends ConsumerWidget {
