@@ -11,10 +11,19 @@ class FlowScreen extends ConsumerStatefulWidget {
 }
 
 class _FlowScreenState extends ConsumerState<FlowScreen> {
+  late int timeLimit;
   int elapsedSeconds = 0;
   bool isRunning = false;
   bool isFocusTime = true;
   late Timer _timer;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    timeLimit =
+        ref.read(flowScreenProvider).flow?.focusTime.inSeconds ?? 30 * 1000;
+  }
 
   void startTimer() {
     setState(() {
@@ -22,26 +31,20 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
     });
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        final flowState = ref.read(flowScreenProvider).flow;
-        if (isFocusTime) {
-          if (flowState != null &&
-              elapsedSeconds >= flowState.focusTime.inSeconds) {
-            isFocusTime = false;
-            stopTimer();
-            resetTimer();
-            return;
-          }
+        if (elapsedSeconds >= timeLimit) {
+          timeLimit = isFocusTime
+              ? ref.read(flowScreenProvider).flow?.restTime.inSeconds ??
+                  5 * 1000
+              : ref.read(flowScreenProvider).flow?.focusTime.inSeconds ??
+                  30 * 1000;
+          isFocusTime = !isFocusTime;
+          stopTimer();
+          resetTimer();
+          // 알림 발송
+          // 한번 더 하겠습니까 다이얼로그 표시
         } else {
-          if (flowState != null &&
-              elapsedSeconds >= flowState.restTime.inSeconds) {
-            isFocusTime = true;
-            stopTimer();
-            resetTimer();
-            return;
-          }
+          elapsedSeconds++;
         }
-
-        elapsedSeconds++;
       });
     });
   }
@@ -63,32 +66,17 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
     final flowState = ref.read(flowScreenProvider).flow;
     setState(() {
       elapsedSeconds = isFocusTime
-          ? flowState!.focusTime.inSeconds
-          : flowState!.restTime.inSeconds;
+          ? flowState?.focusTime.inSeconds ?? 30 * 1000
+          : flowState?.restTime.inSeconds ?? 5 * 1000;
     });
   }
+
+  get remainingTime =>
+      "${((timeLimit - elapsedSeconds) ~/ 60).toString().padLeft(2, "0")}:${((timeLimit - elapsedSeconds) % 60).toString().padLeft(2, "0")}";
 
   @override
   Widget build(BuildContext context) {
     final flowState = ref.watch(flowScreenProvider).flow;
-
-    final int focusMinutes =
-        (flowState!.focusTime.inSeconds - elapsedSeconds) ~/ 60;
-    final int focusSeconds = focusMinutes > 0
-        ? (flowState.focusTime.inSeconds - elapsedSeconds) % 60
-        : 0;
-    final remainingFocusTime =
-        '${focusMinutes.toString().padLeft(2, '0')}:${focusSeconds.toString().padLeft(2, '0')}';
-
-    final int restMinutes =
-        (flowState.restTime.inSeconds - elapsedSeconds) ~/ 60;
-    final int restSeconds = restMinutes > 0
-        ? (flowState.restTime.inSeconds - elapsedSeconds) % 60
-        : 0;
-    final remainingRestTime =
-        '${restMinutes.toString().padLeft(2, '0')}:${restSeconds.toString().padLeft(2, '0')}';
-
-    final remainingTime = isFocusTime ? remainingFocusTime : remainingRestTime;
 
     return Scaffold(
       body: Center(
@@ -96,7 +84,7 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
           spacing: 16,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(isFocusTime ? "몰입" : "휴식"),
+            Text("${isFocusTime ? "몰입" : "휴식"} 시간입니다."),
             Text(remainingTime, style: const TextStyle(fontSize: 72)),
             Text('$elapsedSeconds', style: const TextStyle(fontSize: 16)),
             Row(
@@ -121,6 +109,14 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
                 ),
               ],
             ),
+            if (flowState != null)
+              ListView(
+                children: [
+                  Text(flowState.name),
+                  Text("몰입: ${flowState.focusTime}분"),
+                  Text("휴식: ${flowState.restTime}분"),
+                ],
+              )
           ],
         ),
       ),
