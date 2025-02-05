@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_screen_provider.dart';
-import 'package:noti_flutter/utils/time_formatter.dart';
+import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
 
 class FlowScreen extends ConsumerStatefulWidget {
   const FlowScreen({super.key});
@@ -24,6 +23,7 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
     super.initState();
     timeLimit =
         ref.read(flowScreenProvider).flow?.focusTime.inSeconds ?? 30 * 60;
+    startTimer();
   }
 
   void startTimer() {
@@ -100,12 +100,17 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
               "${flowState?.name ?? ""} ${isFocusTime ? "집중" : "휴식"} 시간",
               style: const TextStyle(fontSize: 24),
             ),
-            Text("${remainingTime["minutes"]}:${remainingTime["seconds"]}",
-                style: const TextStyle(fontSize: 64)),
+            Text(
+              "${remainingTime["minutes"]}:${remainingTime["seconds"]}",
+              style: const TextStyle(fontSize: 64, fontWeight: FontWeight.bold),
+            ),
             Text(
               '${isFocusTime ? focusTime : restTime}분 중 남은 시간',
               style: TextStyle(
                   fontSize: 12, color: Theme.of(context).disabledColor),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             Container(
               decoration: BoxDecoration(
@@ -149,25 +154,52 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
                 ],
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
             Row(
-              spacing: -20,
+              spacing: 10,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: isRunning ? null : startTimer,
-                  child: const Text('Start'),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                    ),
+                    onPressed: isRunning ? stopTimer : startTimer,
+                    child: Text(
+                      isRunning ? '일시정지' : "다시 시작하기",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onError,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: isRunning ? stopTimer : null,
-                  child: const Text('Stop'),
-                ),
-                ElevatedButton(
-                  onPressed: resetTimer,
-                  child: const Text('Reset'),
-                ),
-                ElevatedButton(
-                  onPressed: finishTimer,
-                  child: const Text('finish'),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                    ),
+                    onPressed: finishTimer,
+                    child: Text(
+                      '종료하기',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSecondary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -89,15 +89,6 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                         SnackBar(
                           content: Text(e.toString()),
                           backgroundColor: Colors.red,
-                          duration: const Duration(seconds: 20),
-                          action: SnackBarAction(
-                            label: '닫기',
-                            textColor: Colors.white,
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                          ),
                         ),
                       );
                     }

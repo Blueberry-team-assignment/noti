@@ -37,6 +37,7 @@ class NotiFlutter extends ConsumerWidget {
     final ColorScheme colorScheme = ColorScheme.fromSeed(
       brightness: MediaQuery.platformBrightnessOf(context),
       seedColor: Colors.blue,
+      error: const Color(0xffef4444),
     );
     return MaterialApp.router(
       routerConfig: router,

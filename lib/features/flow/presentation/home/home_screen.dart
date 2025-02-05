@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_screen_provider.dart';
+import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
 import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -10,7 +10,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final flowListState = ref.watch(flowListProvider);
-    final flowScreenNotifier = ref.read(flowScreenProvider.notifier);
+    final flowScreenNotifier = ref.read(flowTimerProvider.notifier);
 
     return flowListState.when(
       data: (flowList) {
