@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:noti_flutter/data/auth/auth_repository.dart';
 import 'package:noti_flutter/data/flow/flow_repository.dart';
-import 'package:noti_flutter/data/local_storage/shared_preferences_provider.dart';
+import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/models/flow_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,19 +10,19 @@ final flowListProvider =
     StateNotifierProvider<FlowListNotifier, AsyncValue<List<FlowModel>>>((ref) {
   final flowRepository = ref.watch(flowRepositoryProvider);
   final authRepository = ref.watch(authRepositoryProvider);
-  final sharedPreference = ref.watch(sharedPreferencesProvider);
-  return FlowListNotifier(flowRepository, authRepository, sharedPreference);
+  final guestRepository = ref.watch(guestRepositoryProvider);
+  return FlowListNotifier(flowRepository, authRepository, guestRepository);
 });
 
 class FlowListNotifier extends StateNotifier<AsyncValue<List<FlowModel>>> {
   final FlowRepository _flowRepository;
   final AuthRepository _authRepository;
-  final SharedPreferencesAsync _sharedPreferencesAsync;
+  final GuestRepository _guestRepository;
 
   FlowListNotifier(
     this._flowRepository,
     this._authRepository,
-    this._sharedPreferencesAsync,
+    this._guestRepository,
   ) : super(const AsyncValue.loading());
 
   Future<void> loadFlowList({required bool isAuthUser}) async {
@@ -30,7 +31,7 @@ class FlowListNotifier extends StateNotifier<AsyncValue<List<FlowModel>>> {
 
       final uid = isAuthUser
           ? _authRepository.checkUser()?.uid
-          : await _sharedPreferencesAsync.getString("uid");
+          : await _guestRepository.getUid();
       if (uid == null || uid == "") {
         throw Exception("uid not found");
       }

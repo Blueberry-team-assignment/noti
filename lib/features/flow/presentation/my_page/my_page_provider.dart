@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/data/auth/auth_repository.dart';
-import 'package:noti_flutter/data/local_storage/shared_preferences_provider.dart';
+import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 import 'package:noti_flutter/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,28 +9,30 @@ final myPageNotifierProvider =
     StateNotifierProvider.family<MyPageNotifier, MyPageState, UserState>(
         (ref, userState) {
   final authRepository = ref.watch(authRepositoryProvider);
-  final sharedPreferences = ref.watch(sharedPreferencesProvider);
-  return MyPageNotifier(authRepository, userState, sharedPreferences);
+  final guestRepository = ref.watch(guestRepositoryProvider);
+  return MyPageNotifier(authRepository, userState, guestRepository);
 });
 
 class MyPageNotifier extends StateNotifier<MyPageState> {
   final AuthRepository _authRepository;
   final UserState _userState;
-  final SharedPreferencesAsync _sharedPreferencesAsync;
+  final GuestRepository _guestRepository;
 
   MyPageNotifier(
     this._authRepository,
     this._userState,
-    this._sharedPreferencesAsync,
+    this._guestRepository,
   ) : super(MyPageState()) {
     state = MyPageState(user: _userState.user);
   }
 
-  Future<void> logout() async {
+  Future<void> logout({required bool isAuthUser}) async {
     try {
-      await _authRepository.logOut();
-
-      await _sharedPreferencesAsync.remove("uid");
+      if (isAuthUser) {
+        await _authRepository.logOut();
+      } else {
+        await _guestRepository.deleteUid();
+      }
 
       state = MyPageState(isLoading: false);
     } catch (e) {

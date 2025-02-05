@@ -28,7 +28,9 @@ class MyPageScreen extends ConsumerWidget {
         ElevatedButton(
             onPressed: () async {
               try {
-                await myPageNotifier.logout();
+                await myPageNotifier.logout(
+                  isAuthUser: userState.user!.isAuthUser,
+                );
                 userNotifier
                     .resetUserState(); // 이걸 하지 않으면 login state에 user가 남아 있음
               } catch (e) {}
