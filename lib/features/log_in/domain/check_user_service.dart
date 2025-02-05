@@ -5,7 +5,7 @@ import 'package:noti_flutter/models/user_model.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/talker.dart';
 
-final checkUserUsecaseProvider = Provider((ref) {
+final checkUserServiceProvider = Provider((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final fireStoreRepository = ref.watch(fireStoreRepositoryProvider);
   final guestRepository = ref.watch(guestRepositoryProvider);
