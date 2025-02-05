@@ -1,12 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:noti_flutter/data/auth/auth_repository.dart';
 import 'package:noti_flutter/data/flow/flow_repository.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/models/flow_model.dart';
 
-final flowListProvider =
-    StateNotifierProvider<FlowListNotifier, AsyncValue<List<FlowModel>>>((ref) {
+final flowListProvider = StateNotifierProvider.autoDispose<FlowListNotifier,
+    AsyncValue<List<FlowModel>>>((ref) {
   final flowRepository = ref.watch(flowRepositoryProvider);
   final authRepository = ref.watch(authRepositoryProvider);
   final guestRepository = ref.watch(guestRepositoryProvider);
@@ -22,7 +21,9 @@ class FlowListNotifier extends StateNotifier<AsyncValue<List<FlowModel>>> {
     this._flowRepository,
     this._authRepository,
     this._guestRepository,
-  ) : super(const AsyncValue.loading());
+  ) : super(const AsyncValue.loading()) {
+    loadFlowList();
+  }
 
   Future<void> loadFlowList() async {
     try {
@@ -36,10 +37,11 @@ class FlowListNotifier extends StateNotifier<AsyncValue<List<FlowModel>>> {
 
       final flowList = await _flowRepository.getFlowList(uid: uid);
 
-      state = AsyncValue.data(flowList);
+      if (mounted) {
+        state = AsyncValue.data(flowList);
+      }
     } catch (e, st) {
       state = AsyncValue.error(e, st);
-      rethrow;
     }
   }
 }

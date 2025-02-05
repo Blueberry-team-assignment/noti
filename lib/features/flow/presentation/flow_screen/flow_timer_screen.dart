@@ -22,7 +22,7 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
     // TODO: implement initState
     super.initState();
     timeLimit =
-        ref.read(flowScreenProvider).flow?.focusTime.inSeconds ?? 30 * 60;
+        ref.read(flowTimerProvider).flow?.focusTime.inSeconds ?? 30 * 60;
     startTimer();
   }
 
@@ -34,9 +34,8 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
       setState(() {
         if (elapsedSeconds >= timeLimit) {
           timeLimit = isFocusTime
-              ? ref.read(flowScreenProvider).flow?.restTime.inSeconds ??
-                  5 * 1000
-              : ref.read(flowScreenProvider).flow?.focusTime.inSeconds ??
+              ? ref.read(flowTimerProvider).flow?.restTime.inSeconds ?? 5 * 1000
+              : ref.read(flowTimerProvider).flow?.focusTime.inSeconds ??
                   30 * 1000;
           isFocusTime = !isFocusTime;
           stopTimer();
@@ -64,7 +63,7 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
   }
 
   void finishTimer() {
-    final flowState = ref.read(flowScreenProvider).flow;
+    final flowState = ref.read(flowTimerProvider).flow;
     setState(() {
       elapsedSeconds = isFocusTime
           ? flowState?.focusTime.inSeconds ?? 30 * 60
@@ -85,7 +84,7 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final flowState = ref.watch(flowScreenProvider).flow;
+    final flowState = ref.watch(flowTimerProvider).flow;
     final focusTime =
         formatSecondsToMMSS(flowState?.focusTime.inSeconds)["minutes"];
     final restTime =
