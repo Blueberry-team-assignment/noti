@@ -1,28 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/data/flow/flow_repository.dart';
 import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_screen_provider.dart';
-import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
-import 'package:noti_flutter/models/flow_model.dart';
-
-final flowListProvider =
-    FutureProvider.autoDispose<List<FlowModel>>((ref) async {
-  final user = ref.watch(userNotifierProvider).user;
-  final flowRepository = ref.read(flowRepositoryProvider);
-  if (user == null) return [];
-  return await flowRepository.getFlowList(uid: user.uid);
-});
+import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final fetchedFlowList = ref.watch(flowListProvider);
+    final flowListState = ref.watch(flowListProvider);
     final flowScreenNotifier = ref.read(flowScreenProvider.notifier);
 
-    return fetchedFlowList.when(
+    return flowListState.when(
       data: (flowList) {
         if (flowList.isEmpty) {
           return Column(

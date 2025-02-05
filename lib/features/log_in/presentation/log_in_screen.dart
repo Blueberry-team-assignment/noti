@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/data/local_storage/shared_preferences_provider.dart';
+import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 import 'package:noti_flutter/talker.dart';
 
@@ -21,12 +22,14 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
   Widget build(BuildContext context) {
     final userState = ref.watch(userNotifierProvider);
     final userNotifier = ref.read(userNotifierProvider.notifier);
+    final flowListNotifier = ref.read(flowListProvider.notifier);
     final sharedPrefs = ref.watch(sharedPreferencesProvider); // test용
 
     ref.listen(userNotifierProvider, (prev, next) {
       talkerInfo("loginScreen",
           "prev: ${prev?.user.toString()}, isLoading :${prev?.isLoading}, next: ${next.user.toString()}, isLoading :${next.isLoading}");
       if (next.user != null) {
+        flowListNotifier.loadFlowList(isAuthUser: next.user!.isAuthUser);
         context.go('/home');
       }
     });
