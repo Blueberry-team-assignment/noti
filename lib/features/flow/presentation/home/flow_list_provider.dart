@@ -24,13 +24,12 @@ class FlowListNotifier extends StateNotifier<AsyncValue<List<FlowModel>>> {
     this._guestRepository,
   ) : super(const AsyncValue.loading());
 
-  Future<void> loadFlowList({required bool isAuthUser}) async {
+  Future<void> loadFlowList() async {
     try {
       state = const AsyncValue.loading();
 
-      final uid = isAuthUser
-          ? _authRepository.checkUser()?.uid
-          : await _guestRepository.getUid();
+      final uid =
+          await _guestRepository.getUid() ?? _authRepository.checkUser()?.uid;
       if (uid == null || uid == "") {
         throw Exception("uid not found");
       }

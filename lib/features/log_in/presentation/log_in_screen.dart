@@ -29,7 +29,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
       talkerInfo("loginScreen",
           "prev: ${prev?.user.toString()}, isLoading :${prev?.isLoading}, next: ${next.user.toString()}, isLoading :${next.isLoading}");
       if (next.user != null) {
-        flowListNotifier.loadFlowList(isAuthUser: next.user!.isAuthUser);
+        flowListNotifier.loadFlowList();
         context.go('/home');
       }
     });

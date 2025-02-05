@@ -144,9 +144,7 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
                   }
                   Future.delayed(const Duration(milliseconds: 1000), () {
                     if (context.mounted) {
-                      ref
-                          .read(flowListProvider.notifier)
-                          .loadFlowList(isAuthUser: userState.user!.isAuthUser);
+                      ref.read(flowListProvider.notifier).loadFlowList();
                       context.go("/home");
                     }
                   });
