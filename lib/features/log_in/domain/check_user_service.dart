@@ -4,7 +4,6 @@ import 'package:noti_flutter/data/fire_store/fire_store_repository.dart';
 import 'package:noti_flutter/models/user_model.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/talker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final checkUserUsecaseProvider = Provider((ref) {
   final authRepository = ref.watch(authRepositoryProvider);

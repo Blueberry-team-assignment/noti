@@ -3,7 +3,6 @@ import 'package:noti_flutter/data/auth/auth_repository.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 import 'package:noti_flutter/models/user_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final myPageNotifierProvider =
     StateNotifierProvider.family<MyPageNotifier, MyPageState, UserState>(

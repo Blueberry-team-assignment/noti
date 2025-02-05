@@ -4,7 +4,6 @@ import 'package:noti_flutter/data/auth/auth_repository.dart';
 import 'package:noti_flutter/data/flow/flow_repository.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/models/flow_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final flowListProvider =
     StateNotifierProvider<FlowListNotifier, AsyncValue<List<FlowModel>>>((ref) {
