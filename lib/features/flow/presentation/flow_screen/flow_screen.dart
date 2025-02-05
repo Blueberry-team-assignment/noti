@@ -109,14 +109,14 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
                 ),
               ],
             ),
-            if (flowState != null)
-              ListView(
-                children: [
-                  Text(flowState.name),
-                  Text("몰입: ${flowState.focusTime}분"),
-                  Text("휴식: ${flowState.restTime}분"),
-                ],
-              )
+            // if (flowState != null)
+            //   ListView(
+            //     children: [
+            //       Text(flowState.name),
+            //       Text("몰입: ${flowState.focusTime}분"),
+            //       Text("휴식: ${flowState.restTime}분"),
+            //     ],
+            //   )
           ],
         ),
       ),

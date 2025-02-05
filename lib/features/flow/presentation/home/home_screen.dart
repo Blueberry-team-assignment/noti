@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_screen_provider.dart';
 import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
+import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
