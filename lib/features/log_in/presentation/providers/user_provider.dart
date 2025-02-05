@@ -7,7 +7,7 @@ import 'package:noti_flutter/models/user_model.dart';
 final userNotifierProvider =
     StateNotifierProvider.autoDispose<UserNotifier, UserState>((ref) {
   final logInUsecase = ref.watch(logInUsecaseProvider);
-  final checkUserService = ref.watch(checkUserUsecaseProvider);
+  final checkUserService = ref.watch(checkUserServiceProvider);
   final startGuestUserService = ref.watch(startGuestUserServiceProvider);
   return UserNotifier(logInUsecase, checkUserService, startGuestUserService);
 });

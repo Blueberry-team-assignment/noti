@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/dto/flow_dto.dart';
+import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 import 'package:noti_flutter/features/flow/presentation/register_flow/register_flow_provider.dart';
 import 'package:noti_flutter/talker.dart';
@@ -143,6 +144,7 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
                   }
                   Future.delayed(const Duration(milliseconds: 1000), () {
                     if (context.mounted) {
+                      ref.read(flowListProvider.notifier).loadFlowList();
                       context.go("/home");
                     }
                   });

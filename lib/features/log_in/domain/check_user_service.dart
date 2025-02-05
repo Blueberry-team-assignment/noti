@@ -2,33 +2,32 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/data/auth/auth_repository.dart';
 import 'package:noti_flutter/data/fire_store/fire_store_repository.dart';
 import 'package:noti_flutter/models/user_model.dart';
-import 'package:noti_flutter/data/local_storage/shared_preferences_provider.dart';
+import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/talker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-final checkUserUsecaseProvider = Provider((ref) {
+final checkUserServiceProvider = Provider((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final fireStoreRepository = ref.watch(fireStoreRepositoryProvider);
-  final sharedPreferences = ref.watch(sharedPreferencesProvider);
-  return CheckUserService(
-      authRepository, fireStoreRepository, sharedPreferences);
+  final guestRepository = ref.watch(guestRepositoryProvider);
+  return CheckUserService(authRepository, fireStoreRepository, guestRepository);
 });
 
 class CheckUserService {
   final AuthRepository _authRepository;
   final FireStoreRepository _fireStoreRepository;
-  final SharedPreferencesAsync _sharedPreferencesAsync;
+  final GuestRepository _guestRepository;
 
   CheckUserService(
     this._authRepository,
     this._fireStoreRepository,
-    this._sharedPreferencesAsync,
+    this._guestRepository,
   );
 
+  // 비회원 사용자 로그인 되어 있는지 확인
   Future<UserModel?> _checkGuestUser() async {
     try {
-      // 비회원으로 로그인한적 있다면, sharedPreferences에 uid 저장되어 있음.
-      final guestUid = await _sharedPreferencesAsync.getString("uid");
+      // 비회원으로 로그인한적 있다면, secure storage에 uid 저장되어 있음.
+      final guestUid = await _guestRepository.getUid();
       if (guestUid == null) {
         talkerInfo("checkUserService", "stored guest uid is not found");
         return null;
@@ -44,6 +43,7 @@ class CheckUserService {
     }
   }
 
+  // 회원가입한 사용자가 로그인 되어 있는지 확인
   Future<UserModel?> _checkAuthUser() async {
     try {
       final currentUser = _authRepository.checkUser();
