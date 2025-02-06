@@ -21,7 +21,7 @@ class HomeScreen extends ConsumerWidget {
               const Text("아직 등록된 플로우가 없어요"),
               ElevatedButton(
                 onPressed: () {
-                  context.pushReplacement("/flow_register");
+                  context.push("/flow_register");
                 },
                 child: const Text('flow 생성'),
               ),
@@ -39,7 +39,7 @@ class HomeScreen extends ConsumerWidget {
                     trailing: ElevatedButton(
                       onPressed: () {
                         flowTimerNotifier.setFlowInfo(flowList[index]);
-                        context.go('/flow');
+                        context.push('/flow');
                       },
                       child: const Text("시작하기"),
                     ),
@@ -57,7 +57,7 @@ class HomeScreen extends ConsumerWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                context.pushReplacement("/flow_register");
+                context.push("/flow_register");
               },
               child: const Text('flow 생성'),
             ),

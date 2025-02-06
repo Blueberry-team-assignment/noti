@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
 
-class FlowScreen extends ConsumerStatefulWidget {
-  const FlowScreen({super.key});
+class FlowTimerScreen extends ConsumerStatefulWidget {
+  const FlowTimerScreen({super.key});
 
   @override
-  ConsumerState<FlowScreen> createState() => _FlowScreenState();
+  ConsumerState<FlowTimerScreen> createState() => _FlowTimerScreenState();
 }
 
-class _FlowScreenState extends ConsumerState<FlowScreen> {
+class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
   int elapsedSeconds = 0;
   bool isRunning = false;
   bool isFocusTime = true;

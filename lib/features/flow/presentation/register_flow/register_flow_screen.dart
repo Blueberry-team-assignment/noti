@@ -174,12 +174,6 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
                 ? const CircularProgressIndicator()
                 : const Text('Submit'),
           ),
-          ElevatedButton(
-            onPressed: () {
-              context.pushReplacement('/home');
-            },
-            child: const Text("돌아가기"),
-          )
         ],
       ),
     );

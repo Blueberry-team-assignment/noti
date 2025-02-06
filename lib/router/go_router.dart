@@ -22,13 +22,6 @@ final router = GoRouter(
       },
       routes: [
         GoRoute(
-          path: '/flow',
-          pageBuilder: (BuildContext context, GoRouterState state) =>
-              NoTransitionPage(
-            child: FlowScreen(),
-          ),
-        ),
-        GoRoute(
           path: '/home',
           pageBuilder: (BuildContext context, GoRouterState state) =>
               const NoTransitionPage(
@@ -67,6 +60,13 @@ final router = GoRouter(
           path: '/flow_register',
           pageBuilder: (BuildContext context, GoRouterState state) =>
               const NoTransitionPage(child: RegisterFlowScreen()),
+        ),
+        GoRoute(
+          path: '/flow',
+          pageBuilder: (BuildContext context, GoRouterState state) =>
+              const NoTransitionPage(
+            child: FlowTimerScreen(),
+          ),
         ),
       ],
     ),
