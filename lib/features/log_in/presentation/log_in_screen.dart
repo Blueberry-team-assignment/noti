@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
+import 'package:noti_flutter/services/local_notification.dart';
 import 'package:noti_flutter/talker.dart';
 
 class LogInScreen extends ConsumerStatefulWidget {
@@ -123,6 +125,32 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
             talkerLog("test screen", "guest uid : ${uid.toString()}");
           },
           child: const Text("uid 프린트해보기"),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            NotificationDetails details = const NotificationDetails(
+              iOS: DarwinNotificationDetails(
+                presentAlert: true,
+                presentBadge: true,
+                presentSound: true,
+              ),
+              android: AndroidNotificationDetails(
+                "1",
+                "test",
+                importance: Importance.max,
+                priority: Priority.high,
+              ),
+            );
+
+            ref.watch(localNotificationProvider).when(
+                data: (plugin) async {
+                  await plugin.show(1, "title", "body", details);
+                },
+                error: (e, st) {},
+                loading: () {});
+            talkerInfo("", "show noti");
+          },
+          child: const Text("알림 발송하기"),
         ),
       ],
     );

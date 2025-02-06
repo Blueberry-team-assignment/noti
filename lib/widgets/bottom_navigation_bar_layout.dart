@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noti_flutter/router/go_router.dart';
+import 'package:noti_flutter/services/go_router.dart';
 
 class BottomNavigationBarLayout extends StatelessWidget {
   final Widget child;

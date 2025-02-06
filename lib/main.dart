@@ -1,8 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/firebase_options.dart';
-import 'package:noti_flutter/router/go_router.dart';
+import 'package:noti_flutter/services/go_router.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
@@ -46,8 +47,13 @@ class _NotiFlutterState extends ConsumerState<NotiFlutter> {
     _permissionWithNotification();
   }
 
+  // IOS인 경우 권한을 요청 받지 않는 상태라면 권한을 요청하고, 거부 또는 허용된 상태에서는 요청하지 않는다.
+  // Android의 경우에는 33레벨 이전에서는 권한을 묻지 않고, 33레벨 이상 부터는 권한이 없는 경우 또는 거부된 상태인 경우 최대 2번까지 요청한다.
   void _permissionWithNotification() async {
-    await [Permission.notification].request();
+    if (await Permission.notification.isDenied &&
+        !await Permission.notification.isPermanentlyDenied) {
+      await [Permission.notification].request();
+    }
   }
 
   @override
