@@ -3,7 +3,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
-import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 import 'package:noti_flutter/services/local_notification.dart';
 import 'package:noti_flutter/talker.dart';
@@ -24,7 +23,6 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
   Widget build(BuildContext context) {
     final userState = ref.watch(userNotifierProvider);
     final userNotifier = ref.read(userNotifierProvider.notifier);
-    final flowListNotifier = ref.read(flowListProvider.notifier);
     final guestRepository = ref.watch(guestRepositoryProvider);
 
     ref.listen(userNotifierProvider, (prev, next) {

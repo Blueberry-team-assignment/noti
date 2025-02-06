@@ -46,7 +46,7 @@ class StartGuestUserService {
       talkerInfo("startGuestUser", guest.uid);
 
       // 다음 접속 시, 또다시 게스트 유저를 새로 만들어서 저장하지 않도록 guest의 uid를 로컬 스토리지에 저장.
-      await _guestRepository.saveUid(uid:  guest.uid.toString());
+      await _guestRepository.saveUid(uid: guest.uid.toString());
       talkerInfo("startGuestUserService",
           'guest user logged in : ${guest.toString()}');
       return guest;
