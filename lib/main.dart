@@ -36,8 +36,7 @@ class NotiFlutter extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ColorScheme colorScheme = ColorScheme.fromSeed(
       brightness: MediaQuery.platformBrightnessOf(context),
-      seedColor: Colors.blue,
-      error: const Color(0xffef4444),
+      seedColor: const Color(0xFFFAFAFA),
     );
     return MaterialApp.router(
       routerConfig: router,
@@ -45,6 +44,47 @@ class NotiFlutter extends ConsumerWidget {
       theme: ThemeData(
         colorScheme: colorScheme,
         useMaterial3: true,
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(
+            fontSize: 64,
+            fontWeight: FontWeight.bold,
+          ),
+          displayMedium: TextStyle(
+            fontSize: 45,
+            fontWeight: FontWeight.w600,
+          ),
+          displaySmall: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.w500,
+          ),
+          titleLarge: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+          titleMedium: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+          titleSmall: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+          bodyLarge: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: Colors.black,
+          ),
+          bodyMedium: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+            color: Colors.black87,
+          ),
+          bodySmall: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
+            color: Colors.black54,
+          ),
+        ),
       ),
     );
   }

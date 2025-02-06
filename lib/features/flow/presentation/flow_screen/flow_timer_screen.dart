@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
 
 class FlowTimerScreen extends ConsumerStatefulWidget {
@@ -11,13 +13,24 @@ class FlowTimerScreen extends ConsumerStatefulWidget {
 }
 
 class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
-  int elapsedSeconds = 0;
-  bool isRunning = false;
-  bool isFocusTime = true;
-  late Timer _timer;
+  int elapsedSeconds = 0; // 타이머가 시작되고 경과된 시간
+  bool isRunning = false; // 타이머가 동작 중인가
+  bool isFocusTime = true; // 현재 집중단계(1단계)인가
+  int round = 1; // 플로우가 몇 회차인지
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    // 런타입 에러를 방지하기 위해 타이머가 초기화 된 상태일 때만 타이머 종료 후 디스포스
+    if (_timer != null && _timer!.isActive) {
+      _timer!.cancel();
+    }
+    super.dispose();
+  }
 
   void startTimer() {
-    // 타이머의 제한 시간 설정
+    // 1. 타이머의 제한 시간 설정
     final flowTimerState = ref.watch(flowTimerProvider).flow;
     if (flowTimerState == null) return;
 
@@ -28,15 +41,12 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
       isRunning = true;
     });
 
-    // 타이머 초기화
+    // 2. 타이머 초기화
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (elapsedSeconds >= timeLimit) {
-          isFocusTime = !isFocusTime;
-          stopTimer();
-          resetTimer();
+          goToNextPhase();
           // 알림 발송
-          // 한번 더 하겠습니까 다이얼로그 표시
         } else {
           elapsedSeconds++;
         }
@@ -48,20 +58,42 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
     setState(() {
       isRunning = false;
     });
-    _timer.cancel();
+    _timer!.cancel();
   }
 
-  void resetTimer() {
+  void rewindTimer() {
+    stopTimer();
     setState(() {
       elapsedSeconds = 0;
     });
   }
 
-  // 타이머 종료 (제한 시간 모두 소모시키기)
-  void finishTimer() {
+  // 다음 단계로 건너뛰기
+  void goToNextPhase() {
+    // 1. 휴식단계까지 다 끝났으면 회차++
+    if (!isFocusTime) {
+      round++;
+    }
+
+    // 2. 다음 단계 타이머를 위해 설정 초기화
     isFocusTime = !isFocusTime;
     stopTimer();
-    resetTimer();
+    rewindTimer();
+  }
+
+  // 이전 단계로 돌아가기
+  void backToPreviousPhase() {
+    setState(() {
+      isFocusTime = !isFocusTime;
+    });
+  }
+
+  // 중첩된 삼항연산자 리팩토링: 상태에 따른 버튼 액션 반환 함수
+  VoidCallback? _getButtonAction() {
+    if (isRunning) return goToNextPhase;
+    if (elapsedSeconds > 0) return rewindTimer;
+    if (isFocusTime) return null; // 버튼 비활성화
+    return backToPreviousPhase;
   }
 
   static Map<String, String> formatSecondsToMMSS(int? time) {
@@ -84,7 +116,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
     final restTime = formatSecondsToMMSS(
         flowTimerState?.restTime.inSeconds)["minutesWithoutPadLeft"];
 
-    // 타이머의 제한 시간
+    // 현재 단계의 타이머의 제한 시간
     final timeLimit = isFocusTime
         ? flowTimerState?.focusTime.inSeconds
         : flowTimerState?.restTime.inSeconds;
@@ -97,18 +129,31 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
         child: Column(
           spacing: 0,
           children: [
-            Text(
-              "${flowTimerState?.name ?? ""} ${isFocusTime ? "집중" : "휴식"} 시간",
-              style: const TextStyle(fontSize: 24),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  flowTimerState?.name ?? "",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                Text(
+                  " ${isFocusTime ? "집중" : "휴식"} 시간",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
             ),
             Text(
               "${remainingTime["minutes"]}:${remainingTime["seconds"]}",
-              style: const TextStyle(fontSize: 64, fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .displayLarge!
+                  .copyWith(letterSpacing: 1),
             ),
             Text(
               '${isFocusTime ? focusTime : restTime}분 중 남은 시간',
-              style: TextStyle(
-                  fontSize: 12, color: Theme.of(context).disabledColor),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(
               height: 20,
@@ -118,40 +163,90 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
               ),
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               child: Column(
-                spacing: 8,
+                spacing: 10,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("현재 진행중인 플로우"),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(isFocusTime ? "1단계" : "2단계"),
-                      Text(
-                          "${flowTimerState?.name} ${isFocusTime ? "집중하기" : "휴식하기"} (${isFocusTime ? focusTime : restTime}분)")
-                    ],
-                  ),
-                  LinearProgressIndicator(
-                    value: elapsedSeconds / (timeLimit ?? 1),
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "진행률 %",
-                        style:
-                            TextStyle(color: Theme.of(context).disabledColor),
+                        "현재 진행중인 플로우",
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      Text("$focusTime분 집중 후 $restTime분 휴식")
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            "$round",
+                            style:
+                                Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                          ),
+                          Text(
+                            " 회차",
+                            style:
+                                Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    spacing: 8,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            isFocusTime ? "1단계" : "2단계",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "${flowTimerState?.name} ${isFocusTime ? "집중하기" : "휴식하기"}(${isFocusTime ? focusTime : restTime}분)",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      LinearProgressIndicator(
+                        color: Theme.of(context).primaryColorDark,
+                        value: timeLimit == null
+                            ? null
+                            : elapsedSeconds / timeLimit,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "진행률 ${timeLimit != null ? (elapsedSeconds / timeLimit * 100).round() : ""}%",
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          Text(
+                            "$focusTime분 집중 후 $restTime분 휴식",
+                            style: Theme.of(context).textTheme.bodySmall,
+                          )
+                        ],
+                      ),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(isFocusTime ? "2단계" : "1단계"),
                       Text(
-                          "${flowTimerState?.name} ${isFocusTime ? "휴식하기" : "집중하기"} (${isFocusTime ? restTime : focusTime}분)")
+                        isFocusTime ? "2단계" : "1단계",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Text(
+                        "${flowTimerState?.name} ${isFocusTime ? "휴식하기" : "집중하기"}(${isFocusTime ? restTime : focusTime}분)",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ],
                   ),
                 ],
@@ -171,13 +266,13 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      backgroundColor: Theme.of(context).colorScheme.error,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
                     onPressed: isRunning ? stopTimer : startTimer,
                     child: Text(
                       isRunning ? '일시정지' : "시작하기",
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onError,
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -191,13 +286,15 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      backgroundColor: Theme.of(context).focusColor,
                     ),
-                    onPressed: finishTimer,
+                    onPressed: _getButtonAction(),
                     child: Text(
-                      '종료하기',
+                      isRunning
+                          ? "건너뛰기"
+                          : (elapsedSeconds > 0 ? "다시하기" : "이전 단계로"),
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondary,
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -206,9 +303,120 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
                 ),
               ],
             ),
+            Expanded(
+              child: Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.inverseSurface,
+                  ),
+                  onPressed: () =>
+                      _showExitDialog(context, flowTimerState?.name ?? ""),
+                  child: Text(
+                    "종료하기",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onInverseSurface,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  // 종료하기 버튼 눌렀을 때 표시될 모달 호출
+  void _showExitDialog(BuildContext context, String flowName) {
+    showDialog(
+      context: context,
+      builder: (context) => FlowEndDialog(
+        round: round,
+        flowName: flowName,
+      ),
+    );
+  }
+}
+
+// 종료하기 버튼 눌렀을 때 표시될 모달. 현재 회차 정보 제공과 기록 저장 여부를 물어보는 역할.
+class FlowEndDialog extends StatelessWidget {
+  final int round;
+  final String flowName;
+
+  const FlowEndDialog({
+    super.key,
+    required this.round,
+    required this.flowName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      icon: const Icon(Icons.timer_outlined),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      backgroundColor: Colors.white,
+      content: Text(
+        textAlign: TextAlign.center,
+        "$flowName 플로우 $round회차 진행 중",
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      actions: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size.fromHeight(40),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+          onPressed: () => _saveAndExit(context),
+          child: Text(
+            "기록 저장 후 종료하기",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size.fromHeight(40),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+          ),
+          onPressed: () {
+            context.go('/home');
+          },
+          child: Text(
+            "기록 저장하지 않고 종료하기",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSecondary,
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _saveAndExit(BuildContext context) {
+    // onSubmit();
+    context.go("/home");
   }
 }

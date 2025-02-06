@@ -74,9 +74,10 @@ final router = GoRouter(
 );
 
 const Map<String, String> routeTitles = {
-  '/flow': 'Flow',
-  '/home': 'Home',
-  '/my_page': 'My Page',
-  '/sign_up': 'Sign Up',
-  '/log_in': 'Log In',
+  '/flow': '플로우',
+  '/home': '플로우 목록',
+  '/my_page': '마이 페이지',
+  '/sign_up': '회원가입',
+  '/log_in': '로그인',
+  '/flow_register': "플로우 등록"
 };

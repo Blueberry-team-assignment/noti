@@ -111,7 +111,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                context.push('/sign_up');
+                context.go('/sign_up');
               },
               child: const Text("회원가입"),
             ),

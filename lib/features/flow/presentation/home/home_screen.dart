@@ -23,7 +23,7 @@ class HomeScreen extends ConsumerWidget {
                 onPressed: () {
                   context.push("/flow_register");
                 },
-                child: const Text('flow 생성'),
+                child: const Text('플로우 만들러 가기'),
               ),
             ],
           );
@@ -39,7 +39,7 @@ class HomeScreen extends ConsumerWidget {
                     trailing: ElevatedButton(
                       onPressed: () {
                         flowTimerNotifier.setFlowInfo(flowList[index]);
-                        context.push('/flow');
+                        context.go('/flow');
                       },
                       child: const Text("시작하기"),
                     ),
@@ -59,7 +59,7 @@ class HomeScreen extends ConsumerWidget {
               onPressed: () {
                 context.push("/flow_register");
               },
-              child: const Text('flow 생성'),
+              child: const Text('새 플로우 등록하기'),
             ),
             const SizedBox(
               height: 20,
@@ -70,8 +70,19 @@ class HomeScreen extends ConsumerWidget {
       loading: () => const Center(
         child: CircularProgressIndicator(),
       ),
-      error: (err, stackTrace) => Center(
-        child: Text("플로우 목록을 불러오지 못했습니다: $err"),
+      error: (err, stackTrace) => Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Center(
+            child: Text("플로우 목록을 불러오지 못했습니다: $err"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context.push("/flow_register");
+            },
+            child: const Text('플로우 만들러 가기'),
+          ),
+        ],
       ),
     );
   }
