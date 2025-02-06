@@ -118,6 +118,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
     return backToPreviousPhase;
   }
 
+  // second를 화면에 표시할 형식으로 반환하는 함수
   static Map<String, String> formatSecondsToMMSS(int? time) {
     if (time == null) return {};
 
@@ -438,7 +439,11 @@ class FlowEndDialog extends StatelessWidget {
   }
 
   void _saveAndExit(BuildContext context) {
-    // onSubmit();
+    // ref.read(flowHistoryProvider.notifier).saveFlowExecution({
+    //  round: round,
+    //  name: flowName,
+    // date: DateTime.now(),
+    // })
     context.go("/home");
   }
 }
