@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/firebase_options.dart';
 import 'package:noti_flutter/router/go_router.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 
 void main() async {
@@ -29,11 +30,28 @@ void main() async {
   );
 }
 
-class NotiFlutter extends ConsumerWidget {
+class NotiFlutter extends ConsumerStatefulWidget {
   const NotiFlutter({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _NotiFlutterState();
+}
+
+class _NotiFlutterState extends ConsumerState<NotiFlutter> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // 알림 권한 요청
+    _permissionWithNotification();
+  }
+
+  void _permissionWithNotification() async {
+    await [Permission.notification].request();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final ColorScheme colorScheme = ColorScheme.fromSeed(
       brightness: MediaQuery.platformBrightnessOf(context),
       seedColor: const Color(0xFFFAFAFA),

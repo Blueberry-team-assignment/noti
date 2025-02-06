@@ -46,6 +46,7 @@ dependencies:
   cloud_firestore: ^5.6.1
   top_snackbar_flutter: ^3.1.0
   flutter_secure_storage: ^4.2.1
+  permission_handler: ^11.1.0
 
 dev_dependencies:
   flutter_test:
