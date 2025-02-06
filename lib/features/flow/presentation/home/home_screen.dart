@@ -70,19 +70,8 @@ class HomeScreen extends ConsumerWidget {
       loading: () => const Center(
         child: CircularProgressIndicator(),
       ),
-      error: (err, stackTrace) => Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Center(
-            child: Text("플로우 목록을 불러오지 못했습니다: $err"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              context.push("/flow_register");
-            },
-            child: const Text('플로우 만들러 가기'),
-          ),
-        ],
+      error: (err, stackTrace) => Center(
+        child: Text("플로우 목록을 불러오지 못했습니다: $err"),
       ),
     );
   }
