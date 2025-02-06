@@ -11,32 +11,27 @@ class FlowScreen extends ConsumerStatefulWidget {
 }
 
 class _FlowScreenState extends ConsumerState<FlowScreen> {
-  late int timeLimit;
   int elapsedSeconds = 0;
   bool isRunning = false;
   bool isFocusTime = true;
   late Timer _timer;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    timeLimit =
-        ref.read(flowTimerProvider).flow?.focusTime.inSeconds ?? 30 * 60;
-    startTimer();
-  }
-
   void startTimer() {
+    // 타이머의 제한 시간 설정
+    final flowTimerState = ref.watch(flowTimerProvider).flow;
+    if (flowTimerState == null) return;
+
+    final timeLimit = isFocusTime
+        ? flowTimerState.focusTime.inSeconds
+        : flowTimerState.restTime.inSeconds;
     setState(() {
       isRunning = true;
     });
+
+    // 타이머 초기화
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (elapsedSeconds >= timeLimit) {
-          timeLimit = isFocusTime
-              ? ref.read(flowTimerProvider).flow?.restTime.inSeconds ?? 5 * 1000
-              : ref.read(flowTimerProvider).flow?.focusTime.inSeconds ??
-                  30 * 1000;
           isFocusTime = !isFocusTime;
           stopTimer();
           resetTimer();
@@ -62,13 +57,11 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
     });
   }
 
+  // 타이머 종료 (제한 시간 모두 소모시키기)
   void finishTimer() {
-    final flowState = ref.read(flowTimerProvider).flow;
-    setState(() {
-      elapsedSeconds = isFocusTime
-          ? flowState?.focusTime.inSeconds ?? 30 * 60
-          : flowState?.restTime.inSeconds ?? 5 * 60;
-    });
+    isFocusTime = !isFocusTime;
+    stopTimer();
+    resetTimer();
   }
 
   static Map<String, String> formatSecondsToMMSS(int? time) {
@@ -77,18 +70,27 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
     return {
       "minutes": (time ~/ 60).toString().padLeft(2, "0"),
       "seconds": (time % 60).toString().padLeft(2, "0"),
+      "minutesWithoutPadLeft": (time ~/ 60).toString(),
     };
   }
 
-  get remainingTime => formatSecondsToMMSS(timeLimit - elapsedSeconds);
-
   @override
   Widget build(BuildContext context) {
-    final flowState = ref.watch(flowTimerProvider).flow;
-    final focusTime =
-        formatSecondsToMMSS(flowState?.focusTime.inSeconds)["minutes"];
-    final restTime =
-        formatSecondsToMMSS(flowState?.restTime.inSeconds)["minutes"];
+    final flowTimerState = ref.watch(flowTimerProvider).flow;
+
+    // string으로 변환된 집중 시간과 휴식 시간(MM)
+    final focusTime = formatSecondsToMMSS(
+        flowTimerState?.focusTime.inSeconds)["minutesWithoutPadLeft"];
+    final restTime = formatSecondsToMMSS(
+        flowTimerState?.restTime.inSeconds)["minutesWithoutPadLeft"];
+
+    // 타이머의 제한 시간
+    final timeLimit = isFocusTime
+        ? flowTimerState?.focusTime.inSeconds
+        : flowTimerState?.restTime.inSeconds;
+    // 화면에 표시될 타이머의 남은 시간 (MM:SS)
+    final remainingTime = formatSecondsToMMSS(
+        timeLimit != null ? timeLimit - elapsedSeconds : null);
 
     return Scaffold(
       body: Center(
@@ -96,7 +98,7 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
           spacing: 0,
           children: [
             Text(
-              "${flowState?.name ?? ""} ${isFocusTime ? "집중" : "휴식"} 시간",
+              "${flowTimerState?.name ?? ""} ${isFocusTime ? "집중" : "휴식"} 시간",
               style: const TextStyle(fontSize: 24),
             ),
             Text(
@@ -125,12 +127,13 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("1단계"),
-                      Text("${flowState?.name} 집중하기 ($focusTime분)")
+                      Text(isFocusTime ? "1단계" : "2단계"),
+                      Text(
+                          "${flowTimerState?.name} ${isFocusTime ? "집중하기" : "휴식하기"} (${isFocusTime ? focusTime : restTime}분)")
                     ],
                   ),
-                  const LinearProgressIndicator(
-                    value: 1,
+                  LinearProgressIndicator(
+                    value: elapsedSeconds / (timeLimit ?? 1),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,8 +149,9 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("2단계"),
-                      Text("${flowState?.name} 휴식하기 ($restTime분)")
+                      Text(isFocusTime ? "2단계" : "1단계"),
+                      Text(
+                          "${flowTimerState?.name} ${isFocusTime ? "휴식하기" : "집중하기"} (${isFocusTime ? restTime : focusTime}분)")
                     ],
                   ),
                 ],
@@ -171,7 +175,7 @@ class _FlowScreenState extends ConsumerState<FlowScreen> {
                     ),
                     onPressed: isRunning ? stopTimer : startTimer,
                     child: Text(
-                      isRunning ? '일시정지' : "다시 시작하기",
+                      isRunning ? '일시정지' : "시작하기",
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onError,
                         fontWeight: FontWeight.bold,

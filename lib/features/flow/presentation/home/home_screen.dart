@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
 import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
-import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -11,7 +10,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final flowListState = ref.watch(flowListProvider);
-    final flowScreenNotifier = ref.read(flowTimerProvider.notifier);
+    final flowTimerNotifier = ref.read(flowTimerProvider.notifier);
 
     return flowListState.when(
       data: (flowList) {
@@ -39,7 +38,7 @@ class HomeScreen extends ConsumerWidget {
                   return ListTile(
                     trailing: ElevatedButton(
                       onPressed: () {
-                        flowScreenNotifier.setFlowInfo(flowList[index]);
+                        flowTimerNotifier.setFlowInfo(flowList[index]);
                         context.go('/flow');
                       },
                       child: const Text("시작하기"),
