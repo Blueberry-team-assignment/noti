@@ -71,7 +71,7 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
                   textDirection: TextDirection.rtl,
                   decoration: const InputDecoration(
                     suffixText: "분",
-                    labelText: "몰입 시간",
+                    labelText: "집중 시간",
                   ),
                   controller: _focusTimeController,
                   validator: (text) {

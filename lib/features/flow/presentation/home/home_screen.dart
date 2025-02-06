@@ -50,16 +50,18 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                     subtitle: Text(
-                        "몰입: ${flowList[index].focusTime.inMinutes}분  휴식: ${flowList[index].restTime.inMinutes}분"),
+                        "집중: ${flowList[index].focusTime.inMinutes}분  휴식: ${flowList[index].restTime.inMinutes}분"),
                   );
                 },
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                context.push("/flow_register");
-              },
-              child: const Text('새 플로우 등록하기'),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  context.push("/flow_register");
+                },
+                child: const Text('새 플로우 등록하기'),
+              ),
             ),
             const SizedBox(
               height: 20,

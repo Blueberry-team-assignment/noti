@@ -135,20 +135,16 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                 presentSound: true,
               ),
               android: AndroidNotificationDetails(
-                "1",
+                "99",
                 "test",
                 importance: Importance.max,
                 priority: Priority.high,
               ),
             );
 
-            ref.watch(localNotificationProvider).when(
-                data: (plugin) async {
-                  await plugin.show(1, "title", "body", details);
-                },
-                error: (e, st) {},
-                loading: () {});
-            talkerInfo("", "show noti");
+            ref
+                .watch(localNotificationProvider)
+                .show(99, "title", "body", details);
           },
           child: const Text("알림 발송하기"),
         ),

@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
+import 'package:noti_flutter/services/local_notification.dart';
 
 class FlowTimerScreen extends ConsumerStatefulWidget {
   const FlowTimerScreen({super.key});
@@ -21,11 +23,8 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     // 런타입 에러를 방지하기 위해 타이머가 초기화 된 상태일 때만 타이머 종료 후 디스포스
-    if (_timer != null && _timer!.isActive) {
-      _timer!.cancel();
-    }
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -45,13 +44,36 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (elapsedSeconds >= timeLimit) {
+          showNotification();
           goToNextPhase();
-          // 알림 발송
         } else {
           elapsedSeconds++;
         }
       });
     });
+  }
+
+  // 로컬 알림 발송
+  void showNotification() async {
+    NotificationDetails details = const NotificationDetails(
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      ),
+      android: AndroidNotificationDetails(
+        "1",
+        "test",
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+    );
+
+    await ref.watch(localNotificationProvider).show(
+        1,
+        isFocusTime ? "집중 시간이 종료되었어요" : "휴식 시간이 종료되었어요",
+        isFocusTime ? "좋은 집중 시간이었어요! 잠시 쉬어가세요. 😊" : "이제 다시 집중할 시간이에요! 💪",
+        details);
   }
 
   void stopTimer() {
@@ -345,7 +367,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
   }
 }
 
-// 종료하기 버튼 눌렀을 때 표시될 모달. 현재 회차 정보 제공과 기록 저장 여부를 물어보는 역할.
+// 종료하기 버튼 눌렀을 때 표시될 모달 위젯.
 class FlowEndDialog extends StatelessWidget {
   final int round;
   final String flowName;
