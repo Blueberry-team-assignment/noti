@@ -15,8 +15,6 @@ class MyPageScreen extends ConsumerWidget {
     final flowHistoriesState = ref.watch(flowHistoryProvider);
 
     ref.listen(userNotifierProvider, (prev, next) {
-      talkerInfo(
-          "myPageScreen", "prev: ${prev?.user},,,,,, next: ${next.user}");
       if (next.user == null) {
         context.go("/log_in");
       }
