@@ -75,6 +75,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
+                            duration: Duration(seconds: 1),
                             content: Text('로그인 되었습니다.'),
                             backgroundColor: Colors.green,
                           ),

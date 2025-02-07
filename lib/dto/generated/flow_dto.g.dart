@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'flow_dto.dart';
+part of '../flow_dto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

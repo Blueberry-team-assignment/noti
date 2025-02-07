@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:noti_flutter/data/auth/auth_repository.dart';
+import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/features/log_in/domain/check_user_service.dart';
 import 'package:noti_flutter/features/log_in/domain/log_in_usecase.dart';
 import 'package:noti_flutter/features/log_in/domain/start_guest_user_service.dart';
@@ -9,18 +11,25 @@ final userNotifierProvider =
   final logInUsecase = ref.watch(logInUsecaseProvider);
   final checkUserService = ref.watch(checkUserServiceProvider);
   final startGuestUserService = ref.watch(startGuestUserServiceProvider);
-  return UserNotifier(logInUsecase, checkUserService, startGuestUserService);
+  final authRepository = ref.watch(authRepositoryProvider);
+  final guestRepository = ref.watch(guestRepositoryProvider);
+  return UserNotifier(logInUsecase, checkUserService, startGuestUserService,
+      authRepository, guestRepository);
 });
 
 class UserNotifier extends StateNotifier<UserState> {
   final LogInUsecase _logInUsecase;
   final CheckUserService _checkUserService;
   final StartGuestUserService _startGuestUserService;
+  final AuthRepository _authRepository;
+  final GuestRepository _guestRepository;
 
   UserNotifier(
     this._logInUsecase,
     this._checkUserService,
     this._startGuestUserService,
+    this._authRepository,
+    this._guestRepository,
   ) : super(UserState()) {
     checkUserState();
   }
@@ -41,6 +50,22 @@ class UserNotifier extends StateNotifier<UserState> {
       state = UserState(user: authUser);
     } catch (e) {
       setLoading(false);
+      rethrow;
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      if (state.user == null) return;
+
+      if (state.user!.isAuthUser) {
+        await _authRepository.logOut();
+      } else {
+        await _guestRepository.deleteUid();
+      }
+
+      state = UserState(user: null);
+    } catch (e) {
       rethrow;
     }
   }

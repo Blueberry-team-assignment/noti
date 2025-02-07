@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noti_flutter/common/utils/time_formatter.dart';
+import 'package:noti_flutter/dto/flow_history_dto.dart';
 import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
+import 'package:noti_flutter/features/flow/presentation/my_page/flow_history_provider.dart';
+import 'package:noti_flutter/models/flow_model.dart';
 import 'package:noti_flutter/services/local_notification.dart';
 
 class FlowTimerScreen extends ConsumerStatefulWidget {
@@ -117,25 +121,14 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
     return backToPreviousPhase;
   }
 
-  // second를 화면에 표시할 형식으로 반환하는 함수
-  static Map<String, String> formatSecondsToMMSS(int? time) {
-    if (time == null) return {};
-
-    return {
-      "minutes": (time ~/ 60).toString().padLeft(2, "0"),
-      "seconds": (time % 60).toString().padLeft(2, "0"),
-      "minutesWithoutPadLeft": (time ~/ 60).toString(),
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     final flowTimerState = ref.watch(flowTimerProvider).flow;
 
     // string으로 변환된 집중 시간과 휴식 시간(MM)
-    final focusTime = formatSecondsToMMSS(
+    final focusTime = TimeFormatter.formatSecondsToString(
         flowTimerState?.focusTime.inSeconds)["minutesWithoutPadLeft"];
-    final restTime = formatSecondsToMMSS(
+    final restTime = TimeFormatter.formatSecondsToString(
         flowTimerState?.restTime.inSeconds)["minutesWithoutPadLeft"];
 
     // 현재 단계의 타이머의 제한 시간
@@ -143,7 +136,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
         ? flowTimerState?.focusTime.inSeconds
         : flowTimerState?.restTime.inSeconds;
     // 화면에 표시될 타이머의 남은 시간 (MM:SS)
-    final remainingTime = formatSecondsToMMSS(
+    final remainingTime = TimeFormatter.formatSecondsToString(
         timeLimit != null ? timeLimit - elapsedSeconds : null);
 
     return Scaffold(
@@ -336,8 +329,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
                     backgroundColor:
                         Theme.of(context).colorScheme.inverseSurface,
                   ),
-                  onPressed: () =>
-                      _showExitDialog(context, flowTimerState?.name ?? ""),
+                  onPressed: () => _showExitDialog(context, flowTimerState),
                   child: Text(
                     "종료하기",
                     style: TextStyle(
@@ -356,30 +348,37 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
   }
 
   // 종료하기 버튼 눌렀을 때 표시될 모달 호출
-  void _showExitDialog(BuildContext context, String flowName) {
+  void _showExitDialog(BuildContext context, FlowModel? flowTimerState) {
+    if (flowTimerState == null) return;
+
     showDialog(
       context: context,
       builder: (context) => FlowEndDialog(
-        round: round,
-        flowName: flowName,
+        round: round - 1,
+        flowName: flowTimerState.name,
+        flowTime: (flowTimerState.focusTime.inSeconds +
+                flowTimerState.restTime.inSeconds) *
+            (round - 1),
       ),
     );
   }
 }
 
 // 종료하기 버튼 눌렀을 때 표시될 모달 위젯.
-class FlowEndDialog extends StatelessWidget {
+class FlowEndDialog extends ConsumerWidget {
   final int round;
   final String flowName;
+  final int flowTime;
 
   const FlowEndDialog({
     super.key,
     required this.round,
     required this.flowName,
+    required this.flowTime,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       icon: const Icon(Icons.timer_outlined),
       shape: RoundedRectangleBorder(
@@ -400,7 +399,16 @@ class FlowEndDialog extends StatelessWidget {
             ),
             backgroundColor: Theme.of(context).colorScheme.primary,
           ),
-          onPressed: () => _saveAndExit(context),
+          onPressed: () {
+            ref.read(flowHistoryProvider.notifier).createFlowHistory(
+                    flowHistoryDto: FlowHistoryDto(
+                  date: DateTime.now(),
+                  flowName: flowName,
+                  round: round,
+                  flowTime: flowTime,
+                ));
+            context.go("/home");
+          },
           child: Text(
             "기록 저장 후 종료하기",
             style: TextStyle(
@@ -435,14 +443,5 @@ class FlowEndDialog extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  void _saveAndExit(BuildContext context) {
-    // ref.read(flowHistoryProvider.notifier).saveFlowExecution({
-    //  round: round,
-    //  name: flowName,
-    // date: DateTime.now(),
-    // })
-    context.go("/home");
   }
 }
