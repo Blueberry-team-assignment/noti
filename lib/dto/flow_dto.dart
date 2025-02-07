@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'flow_dto.freezed.dart';
-part 'flow_dto.g.dart';
+part 'generated/flow_dto.freezed.dart';
+part 'generated/flow_dto.g.dart';
 
 @freezed
 class FlowDto with _$FlowDto {

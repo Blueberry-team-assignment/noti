@@ -368,7 +368,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
 }
 
 // 종료하기 버튼 눌렀을 때 표시될 모달 위젯.
-class FlowEndDialog extends StatelessWidget {
+class FlowEndDialog extends ConsumerWidget {
   final int round;
   final String flowName;
 
@@ -379,7 +379,7 @@ class FlowEndDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       icon: const Icon(Icons.timer_outlined),
       shape: RoundedRectangleBorder(
@@ -438,11 +438,6 @@ class FlowEndDialog extends StatelessWidget {
   }
 
   void _saveAndExit(BuildContext context) {
-    // ref.read(flowHistoryProvider.notifier).saveFlowExecution({
-    //  round: round,
-    //  name: flowName,
-    // date: DateTime.now(),
-    // })
     context.go("/home");
   }
 }
