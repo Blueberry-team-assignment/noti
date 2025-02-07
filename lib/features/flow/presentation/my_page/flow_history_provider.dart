@@ -6,8 +6,8 @@ import 'package:noti_flutter/dto/flow_history_dto.dart';
 import 'package:noti_flutter/models/flow_history_model.dart';
 import 'package:noti_flutter/talker.dart';
 
-final flowHistoryProvider = StateNotifierProvider<FlowHistoryNotifier,
-    AsyncValue<List<FlowHistoryModel>>>((ref) {
+final flowHistoryProvider = StateNotifierProvider.autoDispose<
+    FlowHistoryNotifier, AsyncValue<List<FlowHistoryModel>>>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final guestRepository = ref.watch(guestRepositoryProvider);
   final flowHistoryRepository = ref.watch(flowHistoryRepositoryProvider);
@@ -25,7 +25,9 @@ class FlowHistoryNotifier
     this._authRepository,
     this._guestRepository,
     this._flowHistoryRepository,
-  ) : super(const AsyncValue.loading());
+  ) : super(const AsyncValue.loading()) {
+    fetchFlowHistories();
+  }
 
   Future<void> fetchFlowHistories() async {
     try {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noti_flutter/common/utils/time_formatter.dart';
 import 'package:noti_flutter/dto/flow_history_dto.dart';
 import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
 import 'package:noti_flutter/features/flow/presentation/my_page/flow_history_provider.dart';
@@ -120,25 +121,14 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
     return backToPreviousPhase;
   }
 
-  // second를 화면에 표시할 형식으로 반환하는 함수
-  static Map<String, String> formatSecondsToMMSS(int? time) {
-    if (time == null) return {};
-
-    return {
-      "minutes": (time ~/ 60).toString().padLeft(2, "0"),
-      "seconds": (time % 60).toString().padLeft(2, "0"),
-      "minutesWithoutPadLeft": (time ~/ 60).toString(),
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     final flowTimerState = ref.watch(flowTimerProvider).flow;
 
     // string으로 변환된 집중 시간과 휴식 시간(MM)
-    final focusTime = formatSecondsToMMSS(
+    final focusTime = TimeFormatter.formatSecondsToString(
         flowTimerState?.focusTime.inSeconds)["minutesWithoutPadLeft"];
-    final restTime = formatSecondsToMMSS(
+    final restTime = TimeFormatter.formatSecondsToString(
         flowTimerState?.restTime.inSeconds)["minutesWithoutPadLeft"];
 
     // 현재 단계의 타이머의 제한 시간
@@ -146,7 +136,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
         ? flowTimerState?.focusTime.inSeconds
         : flowTimerState?.restTime.inSeconds;
     // 화면에 표시될 타이머의 남은 시간 (MM:SS)
-    final remainingTime = formatSecondsToMMSS(
+    final remainingTime = TimeFormatter.formatSecondsToString(
         timeLimit != null ? timeLimit - elapsedSeconds : null);
 
     return Scaffold(
