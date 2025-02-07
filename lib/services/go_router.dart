@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/features/log_in/presentation/log_in_screen.dart';
 import 'package:noti_flutter/features/flow/presentation/register_flow/register_flow_screen.dart';
 import 'package:noti_flutter/features/sign_up/presentation/sign_up_screen.dart';
-import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_screen.dart';
+import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_screen.dart';
 import 'package:noti_flutter/widgets/bottom_navigation_bar_layout.dart';
 import 'package:noti_flutter/features/flow/presentation/home/home_screen.dart';
 import 'package:noti_flutter/features/flow/presentation/my_page/my_page_screen.dart';
@@ -21,13 +21,6 @@ final router = GoRouter(
         );
       },
       routes: [
-        GoRoute(
-          path: '/flow',
-          pageBuilder: (BuildContext context, GoRouterState state) =>
-              NoTransitionPage(
-            child: FlowScreen(),
-          ),
-        ),
         GoRoute(
           path: '/home',
           pageBuilder: (BuildContext context, GoRouterState state) =>
@@ -68,15 +61,23 @@ final router = GoRouter(
           pageBuilder: (BuildContext context, GoRouterState state) =>
               const NoTransitionPage(child: RegisterFlowScreen()),
         ),
+        GoRoute(
+          path: '/flow',
+          pageBuilder: (BuildContext context, GoRouterState state) =>
+              const NoTransitionPage(
+            child: FlowTimerScreen(),
+          ),
+        ),
       ],
     ),
   ],
 );
 
 const Map<String, String> routeTitles = {
-  '/flow': 'Flow',
-  '/home': 'Home',
-  '/my_page': 'My Page',
-  '/sign_up': 'Sign Up',
-  '/log_in': 'Log In',
+  '/flow': '플로우',
+  '/home': '플로우 목록',
+  '/my_page': '마이 페이지',
+  '/sign_up': '회원가입',
+  '/log_in': '로그인',
+  '/flow_register': "플로우 등록"
 };

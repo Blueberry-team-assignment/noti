@@ -9,10 +9,10 @@ class FlowHistoryModel with _$FlowHistoryModel {
     required String id,
     required String flowId,
     required String userId,
-    required DateTime startTime,
-    required DateTime endTime,
-    required int flowCount, // 몇 회차인지
-    required bool isSuccess,
+    required int flowTime, // 진행한 총 시간(초)
+    required int round, // 몇 회차 진행했는지
+    required String flowName,
+    required DateTime date,
     @Default("") String notes,
   }) = _FlowHistoryModel;
 

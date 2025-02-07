@@ -23,10 +23,10 @@ mixin _$FlowHistoryModel {
   String get id => throw _privateConstructorUsedError;
   String get flowId => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
-  DateTime get startTime => throw _privateConstructorUsedError;
-  DateTime get endTime => throw _privateConstructorUsedError;
-  int get flowCount => throw _privateConstructorUsedError; // 몇 회차인지
-  bool get isSuccess => throw _privateConstructorUsedError;
+  int get flowTime => throw _privateConstructorUsedError; // 진행한 총 시간(초)
+  int get round => throw _privateConstructorUsedError; // 몇 회차 진행했는지
+  String get flowName => throw _privateConstructorUsedError;
+  DateTime get date => throw _privateConstructorUsedError;
   String get notes => throw _privateConstructorUsedError;
 
   /// Serializes this FlowHistoryModel to a JSON map.
@@ -49,10 +49,10 @@ abstract class $FlowHistoryModelCopyWith<$Res> {
       {String id,
       String flowId,
       String userId,
-      DateTime startTime,
-      DateTime endTime,
-      int flowCount,
-      bool isSuccess,
+      int flowTime,
+      int round,
+      String flowName,
+      DateTime date,
       String notes});
 }
 
@@ -74,10 +74,10 @@ class _$FlowHistoryModelCopyWithImpl<$Res, $Val extends FlowHistoryModel>
     Object? id = null,
     Object? flowId = null,
     Object? userId = null,
-    Object? startTime = null,
-    Object? endTime = null,
-    Object? flowCount = null,
-    Object? isSuccess = null,
+    Object? flowTime = null,
+    Object? round = null,
+    Object? flowName = null,
+    Object? date = null,
     Object? notes = null,
   }) {
     return _then(_value.copyWith(
@@ -93,22 +93,22 @@ class _$FlowHistoryModelCopyWithImpl<$Res, $Val extends FlowHistoryModel>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      startTime: null == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endTime: null == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      flowCount: null == flowCount
-          ? _value.flowCount
-          : flowCount // ignore: cast_nullable_to_non_nullable
+      flowTime: null == flowTime
+          ? _value.flowTime
+          : flowTime // ignore: cast_nullable_to_non_nullable
               as int,
-      isSuccess: null == isSuccess
-          ? _value.isSuccess
-          : isSuccess // ignore: cast_nullable_to_non_nullable
-              as bool,
+      round: null == round
+          ? _value.round
+          : round // ignore: cast_nullable_to_non_nullable
+              as int,
+      flowName: null == flowName
+          ? _value.flowName
+          : flowName // ignore: cast_nullable_to_non_nullable
+              as String,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       notes: null == notes
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
@@ -129,10 +129,10 @@ abstract class _$$FlowHistoryModelImplCopyWith<$Res>
       {String id,
       String flowId,
       String userId,
-      DateTime startTime,
-      DateTime endTime,
-      int flowCount,
-      bool isSuccess,
+      int flowTime,
+      int round,
+      String flowName,
+      DateTime date,
       String notes});
 }
 
@@ -152,10 +152,10 @@ class __$$FlowHistoryModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? flowId = null,
     Object? userId = null,
-    Object? startTime = null,
-    Object? endTime = null,
-    Object? flowCount = null,
-    Object? isSuccess = null,
+    Object? flowTime = null,
+    Object? round = null,
+    Object? flowName = null,
+    Object? date = null,
     Object? notes = null,
   }) {
     return _then(_$FlowHistoryModelImpl(
@@ -171,22 +171,22 @@ class __$$FlowHistoryModelImplCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      startTime: null == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endTime: null == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      flowCount: null == flowCount
-          ? _value.flowCount
-          : flowCount // ignore: cast_nullable_to_non_nullable
+      flowTime: null == flowTime
+          ? _value.flowTime
+          : flowTime // ignore: cast_nullable_to_non_nullable
               as int,
-      isSuccess: null == isSuccess
-          ? _value.isSuccess
-          : isSuccess // ignore: cast_nullable_to_non_nullable
-              as bool,
+      round: null == round
+          ? _value.round
+          : round // ignore: cast_nullable_to_non_nullable
+              as int,
+      flowName: null == flowName
+          ? _value.flowName
+          : flowName // ignore: cast_nullable_to_non_nullable
+              as String,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       notes: null == notes
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
@@ -202,10 +202,10 @@ class _$FlowHistoryModelImpl implements _FlowHistoryModel {
       {required this.id,
       required this.flowId,
       required this.userId,
-      required this.startTime,
-      required this.endTime,
-      required this.flowCount,
-      required this.isSuccess,
+      required this.flowTime,
+      required this.round,
+      required this.flowName,
+      required this.date,
       this.notes = ""});
 
   factory _$FlowHistoryModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -218,21 +218,22 @@ class _$FlowHistoryModelImpl implements _FlowHistoryModel {
   @override
   final String userId;
   @override
-  final DateTime startTime;
+  final int flowTime;
+// 진행한 총 시간(초)
   @override
-  final DateTime endTime;
+  final int round;
+// 몇 회차 진행했는지
   @override
-  final int flowCount;
-// 몇 회차인지
+  final String flowName;
   @override
-  final bool isSuccess;
+  final DateTime date;
   @override
   @JsonKey()
   final String notes;
 
   @override
   String toString() {
-    return 'FlowHistoryModel(id: $id, flowId: $flowId, userId: $userId, startTime: $startTime, endTime: $endTime, flowCount: $flowCount, isSuccess: $isSuccess, notes: $notes)';
+    return 'FlowHistoryModel(id: $id, flowId: $flowId, userId: $userId, flowTime: $flowTime, round: $round, flowName: $flowName, date: $date, notes: $notes)';
   }
 
   @override
@@ -243,20 +244,19 @@ class _$FlowHistoryModelImpl implements _FlowHistoryModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.flowId, flowId) || other.flowId == flowId) &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.startTime, startTime) ||
-                other.startTime == startTime) &&
-            (identical(other.endTime, endTime) || other.endTime == endTime) &&
-            (identical(other.flowCount, flowCount) ||
-                other.flowCount == flowCount) &&
-            (identical(other.isSuccess, isSuccess) ||
-                other.isSuccess == isSuccess) &&
+            (identical(other.flowTime, flowTime) ||
+                other.flowTime == flowTime) &&
+            (identical(other.round, round) || other.round == round) &&
+            (identical(other.flowName, flowName) ||
+                other.flowName == flowName) &&
+            (identical(other.date, date) || other.date == date) &&
             (identical(other.notes, notes) || other.notes == notes));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, flowId, userId, startTime,
-      endTime, flowCount, isSuccess, notes);
+  int get hashCode => Object.hash(
+      runtimeType, id, flowId, userId, flowTime, round, flowName, date, notes);
 
   /// Create a copy of FlowHistoryModel
   /// with the given fields replaced by the non-null parameter values.
@@ -280,10 +280,10 @@ abstract class _FlowHistoryModel implements FlowHistoryModel {
       {required final String id,
       required final String flowId,
       required final String userId,
-      required final DateTime startTime,
-      required final DateTime endTime,
-      required final int flowCount,
-      required final bool isSuccess,
+      required final int flowTime,
+      required final int round,
+      required final String flowName,
+      required final DateTime date,
       final String notes}) = _$FlowHistoryModelImpl;
 
   factory _FlowHistoryModel.fromJson(Map<String, dynamic> json) =
@@ -296,13 +296,13 @@ abstract class _FlowHistoryModel implements FlowHistoryModel {
   @override
   String get userId;
   @override
-  DateTime get startTime;
+  int get flowTime; // 진행한 총 시간(초)
   @override
-  DateTime get endTime;
+  int get round; // 몇 회차 진행했는지
   @override
-  int get flowCount; // 몇 회차인지
+  String get flowName;
   @override
-  bool get isSuccess;
+  DateTime get date;
   @override
   String get notes;
 

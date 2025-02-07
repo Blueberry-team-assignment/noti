@@ -12,10 +12,10 @@ _$FlowHistoryModelImpl _$$FlowHistoryModelImplFromJson(
       id: json['id'] as String,
       flowId: json['flowId'] as String,
       userId: json['userId'] as String,
-      startTime: DateTime.parse(json['startTime'] as String),
-      endTime: DateTime.parse(json['endTime'] as String),
-      flowCount: (json['flowCount'] as num).toInt(),
-      isSuccess: json['isSuccess'] as bool,
+      flowTime: (json['flowTime'] as num).toInt(),
+      round: (json['round'] as num).toInt(),
+      flowName: json['flowName'] as String,
+      date: DateTime.parse(json['date'] as String),
       notes: json['notes'] as String? ?? "",
     );
 
@@ -25,9 +25,9 @@ Map<String, dynamic> _$$FlowHistoryModelImplToJson(
       'id': instance.id,
       'flowId': instance.flowId,
       'userId': instance.userId,
-      'startTime': instance.startTime.toIso8601String(),
-      'endTime': instance.endTime.toIso8601String(),
-      'flowCount': instance.flowCount,
-      'isSuccess': instance.isSuccess,
+      'flowTime': instance.flowTime,
+      'round': instance.round,
+      'flowName': instance.flowName,
+      'date': instance.date.toIso8601String(),
       'notes': instance.notes,
     };

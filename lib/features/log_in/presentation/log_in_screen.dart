@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
-import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
+import 'package:noti_flutter/services/local_notification.dart';
 import 'package:noti_flutter/talker.dart';
 
 class LogInScreen extends ConsumerStatefulWidget {
@@ -22,7 +23,6 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
   Widget build(BuildContext context) {
     final userState = ref.watch(userNotifierProvider);
     final userNotifier = ref.read(userNotifierProvider.notifier);
-    final flowListNotifier = ref.read(flowListProvider.notifier);
     final guestRepository = ref.watch(guestRepositoryProvider);
 
     ref.listen(userNotifierProvider, (prev, next) {
@@ -88,15 +88,6 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                         SnackBar(
                           content: Text(e.toString()),
                           backgroundColor: Colors.red,
-                          duration: const Duration(seconds: 20),
-                          action: SnackBarAction(
-                            label: '닫기',
-                            textColor: Colors.white,
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                          ),
                         ),
                       );
                     }
@@ -120,7 +111,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                context.push('/sign_up');
+                context.go('/sign_up');
               },
               child: const Text("회원가입"),
             ),
@@ -132,6 +123,28 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
             talkerLog("test screen", "guest uid : ${uid.toString()}");
           },
           child: const Text("uid 프린트해보기"),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            NotificationDetails details = const NotificationDetails(
+              iOS: DarwinNotificationDetails(
+                presentAlert: true,
+                presentBadge: true,
+                presentSound: true,
+              ),
+              android: AndroidNotificationDetails(
+                "99",
+                "test",
+                importance: Importance.max,
+                priority: Priority.high,
+              ),
+            );
+
+            ref
+                .watch(localNotificationProvider)
+                .show(99, "title", "body", details);
+          },
+          child: const Text("알림 발송하기"),
         ),
       ],
     );

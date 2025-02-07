@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_screen_provider.dart';
+import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
 import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
-import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -11,7 +10,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final flowListState = ref.watch(flowListProvider);
-    final flowScreenNotifier = ref.read(flowScreenProvider.notifier);
+    final flowTimerNotifier = ref.read(flowTimerProvider.notifier);
 
     return flowListState.when(
       data: (flowList) {
@@ -22,9 +21,9 @@ class HomeScreen extends ConsumerWidget {
               const Text("아직 등록된 플로우가 없어요"),
               ElevatedButton(
                 onPressed: () {
-                  context.pushReplacement("/flow_register");
+                  context.push("/flow_register");
                 },
-                child: const Text('flow 생성'),
+                child: const Text('플로우 만들러 가기'),
               ),
             ],
           );
@@ -39,7 +38,7 @@ class HomeScreen extends ConsumerWidget {
                   return ListTile(
                     trailing: ElevatedButton(
                       onPressed: () {
-                        flowScreenNotifier.setFlowInfo(flowList[index]);
+                        flowTimerNotifier.setFlowInfo(flowList[index]);
                         context.go('/flow');
                       },
                       child: const Text("시작하기"),
@@ -51,16 +50,18 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                     subtitle: Text(
-                        "몰입: ${flowList[index].focusTime.inMinutes}분  휴식: ${flowList[index].restTime.inMinutes}분"),
+                        "집중: ${flowList[index].focusTime.inMinutes}분  휴식: ${flowList[index].restTime.inMinutes}분"),
                   );
                 },
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                context.pushReplacement("/flow_register");
-              },
-              child: const Text('flow 생성'),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  context.push("/flow_register");
+                },
+                child: const Text('새 플로우 등록하기'),
+              ),
             ),
             const SizedBox(
               height: 20,
