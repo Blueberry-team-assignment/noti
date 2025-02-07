@@ -4,14 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/common/utils/time_formatter.dart';
 import 'package:noti_flutter/features/flow/presentation/my_page/flow_history_provider.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
-import 'package:noti_flutter/talker.dart';
 
 class MyPageScreen extends ConsumerWidget {
   const MyPageScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userNotifier = ref.watch(userNotifierProvider.notifier);
+    final userStateNotifier = ref.watch(userNotifierProvider.notifier);
     final flowHistoriesState = ref.watch(flowHistoryProvider);
 
     ref.listen(userNotifierProvider, (prev, next) {
@@ -133,10 +132,17 @@ class MyPageScreen extends ConsumerWidget {
           child: TextButton(
               onPressed: () async {
                 try {
-                  await userNotifier.logout();
-                  // userNotifier
-                  //     .resetUserState(); // 이걸 하지 않으면 login state에 user가 남아 있음
-                } catch (e) {}
+                  await userStateNotifier.logout();
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("로그아웃에 실패했습니다 ${e.toString()}"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
               },
               child: Text(
                 "로그아웃",
