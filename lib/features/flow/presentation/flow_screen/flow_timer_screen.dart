@@ -387,7 +387,7 @@ class FlowEndDialog extends ConsumerWidget {
       backgroundColor: Colors.white,
       content: Text(
         textAlign: TextAlign.center,
-        "$flowName 플로우 $round회차 진행 중",
+        "$flowName 플로우를 $round회 완료했어요",
         style: Theme.of(context).textTheme.titleMedium,
       ),
       actions: [
