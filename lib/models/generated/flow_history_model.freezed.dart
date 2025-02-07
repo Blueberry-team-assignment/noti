@@ -21,8 +21,8 @@ FlowHistoryModel _$FlowHistoryModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$FlowHistoryModel {
   String get id => throw _privateConstructorUsedError;
-  String get flowId => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
+  String? get flowId => throw _privateConstructorUsedError;
+  String? get userId => throw _privateConstructorUsedError;
   int get flowTime => throw _privateConstructorUsedError; // 진행한 총 시간(초)
   int get round => throw _privateConstructorUsedError; // 몇 회차 진행했는지
   String get flowName => throw _privateConstructorUsedError;
@@ -47,8 +47,8 @@ abstract class $FlowHistoryModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String flowId,
-      String userId,
+      String? flowId,
+      String? userId,
       int flowTime,
       int round,
       String flowName,
@@ -72,8 +72,8 @@ class _$FlowHistoryModelCopyWithImpl<$Res, $Val extends FlowHistoryModel>
   @override
   $Res call({
     Object? id = null,
-    Object? flowId = null,
-    Object? userId = null,
+    Object? flowId = freezed,
+    Object? userId = freezed,
     Object? flowTime = null,
     Object? round = null,
     Object? flowName = null,
@@ -85,14 +85,14 @@ class _$FlowHistoryModelCopyWithImpl<$Res, $Val extends FlowHistoryModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      flowId: null == flowId
+      flowId: freezed == flowId
           ? _value.flowId
           : flowId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
+              as String?,
+      userId: freezed == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       flowTime: null == flowTime
           ? _value.flowTime
           : flowTime // ignore: cast_nullable_to_non_nullable
@@ -127,8 +127,8 @@ abstract class _$$FlowHistoryModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      String flowId,
-      String userId,
+      String? flowId,
+      String? userId,
       int flowTime,
       int round,
       String flowName,
@@ -150,8 +150,8 @@ class __$$FlowHistoryModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? flowId = null,
-    Object? userId = null,
+    Object? flowId = freezed,
+    Object? userId = freezed,
     Object? flowTime = null,
     Object? round = null,
     Object? flowName = null,
@@ -163,14 +163,14 @@ class __$$FlowHistoryModelImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      flowId: null == flowId
+      flowId: freezed == flowId
           ? _value.flowId
           : flowId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
+              as String?,
+      userId: freezed == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       flowTime: null == flowTime
           ? _value.flowTime
           : flowTime // ignore: cast_nullable_to_non_nullable
@@ -200,8 +200,8 @@ class __$$FlowHistoryModelImplCopyWithImpl<$Res>
 class _$FlowHistoryModelImpl implements _FlowHistoryModel {
   const _$FlowHistoryModelImpl(
       {required this.id,
-      required this.flowId,
-      required this.userId,
+      this.flowId,
+      this.userId,
       required this.flowTime,
       required this.round,
       required this.flowName,
@@ -214,9 +214,9 @@ class _$FlowHistoryModelImpl implements _FlowHistoryModel {
   @override
   final String id;
   @override
-  final String flowId;
+  final String? flowId;
   @override
-  final String userId;
+  final String? userId;
   @override
   final int flowTime;
 // 진행한 총 시간(초)
@@ -278,8 +278,8 @@ class _$FlowHistoryModelImpl implements _FlowHistoryModel {
 abstract class _FlowHistoryModel implements FlowHistoryModel {
   const factory _FlowHistoryModel(
       {required final String id,
-      required final String flowId,
-      required final String userId,
+      final String? flowId,
+      final String? userId,
       required final int flowTime,
       required final int round,
       required final String flowName,
@@ -292,9 +292,9 @@ abstract class _FlowHistoryModel implements FlowHistoryModel {
   @override
   String get id;
   @override
-  String get flowId;
+  String? get flowId;
   @override
-  String get userId;
+  String? get userId;
   @override
   int get flowTime; // 진행한 총 시간(초)
   @override

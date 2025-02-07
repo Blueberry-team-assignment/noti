@@ -10,8 +10,8 @@ _$FlowHistoryModelImpl _$$FlowHistoryModelImplFromJson(
         Map<String, dynamic> json) =>
     _$FlowHistoryModelImpl(
       id: json['id'] as String,
-      flowId: json['flowId'] as String,
-      userId: json['userId'] as String,
+      flowId: json['flowId'] as String?,
+      userId: json['userId'] as String?,
       flowTime: (json['flowTime'] as num).toInt(),
       round: (json['round'] as num).toInt(),
       flowName: json['flowName'] as String,

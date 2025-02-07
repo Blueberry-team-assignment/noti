@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noti_flutter/dto/flow_history_dto.dart';
 import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
+import 'package:noti_flutter/features/flow/presentation/my_page/flow_history_provider.dart';
+import 'package:noti_flutter/models/flow_model.dart';
 import 'package:noti_flutter/services/local_notification.dart';
 
 class FlowTimerScreen extends ConsumerStatefulWidget {
@@ -336,8 +339,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
                     backgroundColor:
                         Theme.of(context).colorScheme.inverseSurface,
                   ),
-                  onPressed: () =>
-                      _showExitDialog(context, flowTimerState?.name ?? ""),
+                  onPressed: () => _showExitDialog(context, flowTimerState),
                   child: Text(
                     "종료하기",
                     style: TextStyle(
@@ -356,12 +358,17 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
   }
 
   // 종료하기 버튼 눌렀을 때 표시될 모달 호출
-  void _showExitDialog(BuildContext context, String flowName) {
+  void _showExitDialog(BuildContext context, FlowModel? flowTimerState) {
+    if (flowTimerState == null) return;
+
     showDialog(
       context: context,
       builder: (context) => FlowEndDialog(
-        round: round,
-        flowName: flowName,
+        round: round - 1,
+        flowName: flowTimerState.name,
+        flowTime: (flowTimerState.focusTime.inSeconds +
+                flowTimerState.restTime.inSeconds) *
+            (round - 1),
       ),
     );
   }
@@ -371,11 +378,13 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
 class FlowEndDialog extends ConsumerWidget {
   final int round;
   final String flowName;
+  final int flowTime;
 
   const FlowEndDialog({
     super.key,
     required this.round,
     required this.flowName,
+    required this.flowTime,
   });
 
   @override
@@ -400,7 +409,16 @@ class FlowEndDialog extends ConsumerWidget {
             ),
             backgroundColor: Theme.of(context).colorScheme.primary,
           ),
-          onPressed: () => _saveAndExit(context),
+          onPressed: () {
+            ref.read(flowHistoryProvider.notifier).createFlowHistory(
+                    flowHistoryDto: FlowHistoryDto(
+                  date: DateTime.now(),
+                  flowName: flowName,
+                  round: round,
+                  flowTime: flowTime,
+                ));
+            context.go("/home");
+          },
           child: Text(
             "기록 저장 후 종료하기",
             style: TextStyle(
@@ -435,9 +453,5 @@ class FlowEndDialog extends ConsumerWidget {
         ),
       ],
     );
-  }
-
-  void _saveAndExit(BuildContext context) {
-    context.go("/home");
   }
 }

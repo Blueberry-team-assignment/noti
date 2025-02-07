@@ -7,8 +7,8 @@ part 'generated/flow_history_model.g.dart';
 class FlowHistoryModel with _$FlowHistoryModel {
   const factory FlowHistoryModel({
     required String id,
-    required String flowId,
-    required String userId,
+    String? flowId,
+    String? userId,
     required int flowTime, // 진행한 총 시간(초)
     required int round, // 몇 회차 진행했는지
     required String flowName,
