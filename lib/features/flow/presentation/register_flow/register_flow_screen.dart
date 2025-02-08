@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noti_flutter/data/flow/flow_repository.dart';
 import 'package:noti_flutter/dto/flow_dto.dart';
 import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
-import 'package:noti_flutter/features/flow/presentation/register_flow/register_flow_provider.dart';
-import 'package:noti_flutter/talker.dart';
+import 'package:noti_flutter/common/utils/talker.dart';
 
 class RegisterFlowScreen extends ConsumerStatefulWidget {
   const RegisterFlowScreen({super.key});
@@ -21,6 +21,7 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
   final TextEditingController _restTimeController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _flowNameController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -33,9 +34,7 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userState = ref.watch(userNotifierProvider);
-    final registerFLowState = ref.watch(registerFlowProvider);
-    final registerFLowNotifier = ref.watch(registerFlowProvider.notifier);
+    final userState = ref.watch(userStateProvider);
 
     return Form(
       key: formKey,
@@ -112,6 +111,7 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
+              isLoading = true;
               try {
                 if (formKey.currentState!.validate()) {
                   if (context.mounted) {
@@ -121,17 +121,23 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
                     );
                   }
 
-                  await registerFLowNotifier.createFlow(
-                    uid: userState.user?.uid,
-                    flowDto: FlowDto(
-                      name: _flowNameController.text,
-                      focusTime: Duration(
-                          minutes: int.parse(_focusTimeController.text)),
-                      restTime: Duration(
-                          minutes: int.parse(_restTimeController.text)),
-                      desc: _descController.text,
-                    ),
-                  );
+                  final uid = userState.user?.uid;
+                  if (uid == null) {
+                    throw Exception('uid not found');
+                  }
+
+                  // create요청을 보내는 것 외에는 별다른 처리가 필요없기 때문에 별도의 provider를 두지 않고 repository를 직접 호출합니다.
+                  await ref.read(flowRepositoryProvider).createFlow(
+                        uid: uid,
+                        flowDto: FlowDto(
+                          name: _flowNameController.text,
+                          focusTime: Duration(
+                              minutes: int.parse(_focusTimeController.text)),
+                          restTime: Duration(
+                              minutes: int.parse(_restTimeController.text)),
+                          desc: _descController.text,
+                        ),
+                      );
 
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -142,6 +148,8 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
                       ),
                     );
                   }
+
+                  // 화면이 자연스럽게 이동하도록 딜레이 설정.
                   Future.delayed(const Duration(milliseconds: 1000), () {
                     if (context.mounted) {
                       ref.read(flowListProvider.notifier).loadFlowList();
@@ -168,11 +176,13 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
                     ),
                   );
                 }
+              } finally {
+                isLoading = false;
               }
             },
-            child: registerFLowState.isLoading
+            child: isLoading
                 ? const CircularProgressIndicator()
-                : const Text('Submit'),
+                : const Text('등록하기'),
           ),
         ],
       ),

@@ -5,10 +5,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/common/utils/time_formatter.dart';
 import 'package:noti_flutter/dto/flow_history_dto.dart';
-import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
 import 'package:noti_flutter/features/flow/presentation/my_page/flow_history_provider.dart';
 import 'package:noti_flutter/models/flow_model.dart';
 import 'package:noti_flutter/services/local_notification.dart';
+
+/*  플로우 타이머 실행에 필요한 데이터들을 초기화하기 위한 프로바이더
+    HomeScreen의 플로우 목록에서 플로우 시작하기를 탭 했을때, 해당 플로우의 데이터로 초기화됩니다.
+    단순히 화면에서 사용자가 선택한 Flow객체를 초기화하는 역할만 필요하기 때문에 StateProvider로 작성했습니다.
+ */
+final flowTimerProvider = StateProvider<FlowModel?>((ref) {
+  return null;
+});
 
 class FlowTimerScreen extends ConsumerStatefulWidget {
   const FlowTimerScreen({super.key});
@@ -26,14 +33,15 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
 
   @override
   void dispose() {
-    // 런타입 에러를 방지하기 위해 타이머가 초기화 된 상태일 때만 타이머 종료 후 디스포스
+    // 런타입 에러를 방지하기 위해 타이머가 초기화 된 상태일 때만 타이머를 종료하도록 함
     _timer?.cancel();
     super.dispose();
   }
 
+  // [타이머]. 시작하기
   void startTimer() {
     // 1. 타이머의 제한 시간 설정
-    final flowTimerState = ref.watch(flowTimerProvider).flow;
+    final flowTimerState = ref.watch(flowTimerProvider);
     if (flowTimerState == null) return;
 
     final timeLimit = isFocusTime
@@ -58,6 +66,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
 
   // 로컬 알림 발송
   void showNotification() async {
+    // 1. 알림 발송에 필요한 os별 설정 초기화.
     NotificationDetails details = const NotificationDetails(
       iOS: DarwinNotificationDetails(
         presentAlert: true,
@@ -72,6 +81,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
       ),
     );
 
+    // 2. 알림 발송 요청
     await ref.watch(localNotificationProvider).show(
         1,
         isFocusTime ? "집중 시간이 종료되었어요" : "휴식 시간이 종료되었어요",
@@ -79,6 +89,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
         details);
   }
 
+  // [타이머]. 일시정지
   void stopTimer() {
     setState(() {
       isRunning = false;
@@ -86,6 +97,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
     _timer!.cancel();
   }
 
+  // [타이머]. 현재 단계를 다시 시작하기.
   void rewindTimer() {
     stopTimer();
     setState(() {
@@ -93,7 +105,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
     });
   }
 
-  // 다음 단계로 건너뛰기
+  // [타이머]. 다음 단계로 건너뛰기
   void goToNextPhase() {
     // 1. 휴식단계까지 다 끝났으면 회차++
     if (!isFocusTime) {
@@ -106,7 +118,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
     rewindTimer();
   }
 
-  // 이전 단계로 돌아가기
+  // [타이머]. 이전 단계로 돌아가기
   void backToPreviousPhase() {
     setState(() {
       isFocusTime = !isFocusTime;
@@ -123,7 +135,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final flowTimerState = ref.watch(flowTimerProvider).flow;
+    final flowTimerState = ref.watch(flowTimerProvider);
 
     // string으로 변환된 집중 시간과 휴식 시간(MM)
     final focusTime = TimeFormatter.formatSecondsToString(
@@ -364,7 +376,7 @@ class _FlowTimerScreenState extends ConsumerState<FlowTimerScreen> {
   }
 }
 
-// 종료하기 버튼 눌렀을 때 표시될 모달 위젯.
+// 플로우 종료하기 버튼 눌렀을 때 표시될 모달 위젯.
 class FlowEndDialog extends ConsumerWidget {
   final int round;
   final String flowName;
@@ -400,6 +412,7 @@ class FlowEndDialog extends ConsumerWidget {
             backgroundColor: Theme.of(context).colorScheme.primary,
           ),
           onPressed: () {
+            // 플로우 기록을 저장 후 종료.
             ref.read(flowHistoryProvider.notifier).createFlowHistory(
                     flowHistoryDto: FlowHistoryDto(
                   date: DateTime.now(),

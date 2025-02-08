@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:noti_flutter/services/go_router.dart';
 
+// 앱의 바텀 내비게이션 바를 생성하기 위한 레이아웃입니다.
+// goRouter의 shellRouter와 함께 사용하여 화면에 적용했습니다.
 class BottomNavigationBarLayout extends StatelessWidget {
   final Widget child;
   final String? title;

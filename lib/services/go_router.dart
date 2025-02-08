@@ -9,6 +9,9 @@ import 'package:noti_flutter/features/flow/presentation/home/home_screen.dart';
 import 'package:noti_flutter/features/flow/presentation/my_page/my_page_screen.dart';
 import 'package:noti_flutter/common/widgets/default_app_bar_layout.dart';
 
+/*  router를 처리하기 위한 GoRouter인스턴스 초기화.
+    현재 서비스에서 꼭 필요한 것은 아니지만, 프로덕트에서 리다이렉트나 사용자의 앱의 특정 화면으로 보내는 경우에 많이 사용하기 때문에 연습해보고 싶어서 넣었습니다.
+ */
 final router = GoRouter(
   initialLocation: '/log_in',
   routes: [

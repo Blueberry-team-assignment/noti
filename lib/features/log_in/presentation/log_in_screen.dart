@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
 import 'package:noti_flutter/services/local_notification.dart';
-import 'package:noti_flutter/talker.dart';
+import 'package:noti_flutter/common/utils/talker.dart';
 
 class LogInScreen extends ConsumerStatefulWidget {
   const LogInScreen({super.key});
@@ -21,13 +21,12 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userState = ref.watch(userNotifierProvider);
-    final userNotifier = ref.read(userNotifierProvider.notifier);
+    final userState = ref.watch(userStateProvider);
+    final userStateNotifier = ref.read(userStateProvider.notifier);
     final guestRepository = ref.watch(guestRepositoryProvider);
 
-    ref.listen(userNotifierProvider, (prev, next) {
-      talkerInfo("loginScreen",
-          "prev: ${prev?.user.toString()}, isLoading :${prev?.isLoading}, next: ${next.user.toString()}, isLoading :${next.isLoading}");
+    // 로그인 요청이 성공하여 userState에 유저정보가 저장되면, HomeScreen으로 이동시킵니다.
+    ref.listen(userStateProvider, (prev, next) {
       if (next.user != null) {
         context.go('/home');
       }
@@ -66,7 +65,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                         );
                       }
 
-                      await userNotifier.login(
+                      await userStateNotifier.login(
                         email: _emailController.text,
                         password: _passwordController.text,
                       );
@@ -106,7 +105,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
           children: [
             ElevatedButton(
               onPressed: () {
-                userNotifier.startGuestUser();
+                userStateNotifier.startGuestUser();
               },
               child: const Text("비회원으로 시작하기"),
             ),

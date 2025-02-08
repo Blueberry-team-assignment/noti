@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/dto/sign_up_dto.dart';
-import 'package:noti_flutter/talker.dart';
+import 'package:noti_flutter/common/utils/talker.dart';
+
+/* 사용자 인증을 위한 레포지토리.
+  firebaseAuth에 요청을 보내 로그인/로그아웃/로그인체크/회원가입 기능을 처리합니다. 
+ */
 
 final authRepositoryProvider = Provider((ref) {
   final firebaseAuth = FirebaseAuth.instance;
