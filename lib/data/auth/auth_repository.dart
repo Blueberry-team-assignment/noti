@@ -52,6 +52,10 @@ class AuthRepositoryImpl implements AuthRepository {
         throw Exception('user not logged in');
       }
 
+      // 회원가입 성공 후 logInScreen으로 돌아갔을 때 자동 로그인되는 것을 원치 않기 때문에,
+      // 로그아웃을 호출 후 진행합니다.
+      await logOut();
+
       talkerInfo("authRepository(signUp)",
           'user signed up : ${userCredential.user?.uid}');
       return userCredential.user;

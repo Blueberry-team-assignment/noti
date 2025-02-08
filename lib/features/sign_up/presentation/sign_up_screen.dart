@@ -120,6 +120,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
+                        duration: Duration(seconds: 1),
                         content: Text('회원가입이 완료되었습니다.'),
                         backgroundColor: Colors.green,
                       ),

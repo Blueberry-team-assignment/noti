@@ -143,6 +143,7 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
+                        duration: Duration(seconds: 1),
                         content: Text('플로우가 등록되었습니다'),
                         backgroundColor: Colors.green,
                       ),
