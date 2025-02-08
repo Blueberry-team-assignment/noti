@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/dto/sign_up_dto.dart';
-import 'package:noti_flutter/talker.dart';
+import 'package:noti_flutter/common/utils/talker.dart';
+
+/* 사용자 인증을 위한 레포지토리.
+  firebaseAuth에 요청을 보내 로그인/로그아웃/로그인체크/회원가입 기능을 처리합니다. 
+ */
 
 final authRepositoryProvider = Provider((ref) {
   final firebaseAuth = FirebaseAuth.instance;
@@ -47,6 +51,10 @@ class AuthRepositoryImpl implements AuthRepository {
         );
         throw Exception('user not logged in');
       }
+
+      // 회원가입 성공 후 logInScreen으로 돌아갔을 때 자동 로그인되는 것을 원치 않기 때문에,
+      // 로그아웃을 호출 후 진행합니다.
+      await logOut();
 
       talkerInfo("authRepository(signUp)",
           'user signed up : ${userCredential.user?.uid}');

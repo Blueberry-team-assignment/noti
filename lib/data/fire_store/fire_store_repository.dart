@@ -2,7 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/dto/sign_up_dto.dart';
 import 'package:noti_flutter/models/user_model.dart';
-import 'package:noti_flutter/talker.dart';
+import 'package:noti_flutter/common/utils/talker.dart';
+
+/*  사용자의 정보를 fireStore에 저장/조회 위한 레포지토리.
+    authRepository의 메서드로 회원가입/로그인 시 uid를 얻으며,
+    이 uid를 통해 user컬렉션의 문서를 식별하여 로그인한 사용자의 정보를 조회/저장합니다.
+ */
 
 final fireStoreRepositoryProvider = Provider((ref) {
   final firebaseFirestore = FirebaseFirestore.instance;

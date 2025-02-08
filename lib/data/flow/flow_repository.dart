@@ -2,7 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:noti_flutter/dto/flow_dto.dart';
 import 'package:noti_flutter/models/flow_model.dart';
-import 'package:noti_flutter/talker.dart';
+import 'package:noti_flutter/common/utils/talker.dart';
+
+/*  플로우를 실행하기 위한 데이터를 관리하는 레포지토리.
+    사용자의 uid를 통해 fireStore의 user컬렉션의 위치를 식별하여 플로우 데이터의 CRUD를 처리합니다.
+ */
 
 final flowRepositoryProvider = Provider<FlowRepository>((ref) {
   final firebaseFireStore = FirebaseFirestore.instance;

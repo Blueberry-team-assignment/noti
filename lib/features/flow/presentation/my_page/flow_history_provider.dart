@@ -4,7 +4,12 @@ import 'package:noti_flutter/data/flow/flow_history_repository.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/dto/flow_history_dto.dart';
 import 'package:noti_flutter/models/flow_history_model.dart';
-import 'package:noti_flutter/talker.dart';
+import 'package:noti_flutter/common/utils/talker.dart';
+
+/*  플로우 기록을 관리하기 위한 프로바이더.
+    1. flowTimerScreen에서 사용자가 "기록을 저장하고 종료하기"를 탭할 시 완료한 플로우 기록을 db에 저장합니다.
+    2. myPageScreen에서 사용자가 저장한 플로우 기록을 목록으로 제공합니다.
+ */
 
 final flowHistoryProvider = StateNotifierProvider.autoDispose<
     FlowHistoryNotifier, AsyncValue<List<FlowHistoryModel>>>((ref) {
@@ -31,18 +36,18 @@ class FlowHistoryNotifier
 
   Future<void> fetchFlowHistories() async {
     try {
-      // 1. user컬렉션의 문서를 식별하기 위한 uid 세팅.
+      // 1. user컬렉션의 문서를 식별하기 위한 uid를 세팅합니다.
       final uid =
           await _guestRepository.getUid() ?? _authRepository.checkUser()?.uid;
       if (uid == null || uid == "") {
         throw Exception("uid not found");
       }
 
-      // 2. 데이터 요청
+      // 2. 서버에 데이터를 요청합니다.
       final flowHistories =
           await _flowHistoryRepository.getFlowHistories(uid: uid);
 
-      // 3. 상태에 저장
+      // 3. 반환된 데이터를 화면에 표시하기 위해 상태에 저장합니다.
       if (mounted) {
         state = AsyncValue.data(flowHistories);
       }
@@ -55,14 +60,14 @@ class FlowHistoryNotifier
     required FlowHistoryDto flowHistoryDto,
   }) async {
     try {
-      // 1. user컬렉션의 문서를 식별하기 위한 uid 세팅.
+      // 1. user컬렉션의 문서를 식별하기 위한 uid를 세팅합니다.
       final uid =
           await _guestRepository.getUid() ?? _authRepository.checkUser()?.uid;
       if (uid == null || uid == "") {
         throw Exception("uid not found");
       }
 
-      // 2. 문서 생성 요청
+      // 2. 서버에 문서 생성을 요청합니다.
       final newFlowHistory = await _flowHistoryRepository.createFlowHistory(
           uid: uid, flowHistoryDto: flowHistoryDto);
 

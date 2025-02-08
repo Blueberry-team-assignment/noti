@@ -42,12 +42,12 @@ class _NotiFlutterState extends ConsumerState<NotiFlutter> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // 알림 권한 요청
+    // 앱 시작시, 알림 권한 요청을 위한 메서드를 호출합니다.
     _permissionWithNotification();
   }
 
-  // IOS인 경우 권한을 요청 받지 않는 상태라면 권한을 요청하고, 거부 또는 허용된 상태에서는 요청하지 않는다.
-  // Android의 경우에는 33레벨 이전에서는 권한을 묻지 않고, 33레벨 이상 부터는 권한이 없는 경우 또는 거부된 상태인 경우 최대 2번까지 요청한다.
+  // IOS인 경우 권한을 요청 받지 않는 상태라면 권한을 요청하고, 거부 또는 허용된 상태에서는 요청하지 않습니다.
+  // Android의 경우에는 33레벨 이전에서는 권한을 묻지 않고, 33레벨 이상 부터는 권한이 없는 경우 또는 거부된 상태인 경우 최대 2번까지 요청합니다.
   void _permissionWithNotification() async {
     if (await Permission.notification.isDenied &&
         !await Permission.notification.isPermanentlyDenied) {

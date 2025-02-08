@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_provider.dart';
+import 'package:noti_flutter/features/flow/presentation/flow_screen/flow_timer_screen.dart';
 import 'package:noti_flutter/features/flow/presentation/home/flow_list_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -10,7 +10,6 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final flowListState = ref.watch(flowListProvider);
-    final flowTimerNotifier = ref.read(flowTimerProvider.notifier);
 
     return flowListState.when(
       data: (flowList) {
@@ -38,7 +37,10 @@ class HomeScreen extends ConsumerWidget {
                   return ListTile(
                     trailing: ElevatedButton(
                       onPressed: () {
-                        flowTimerNotifier.setFlowInfo(flowList[index]);
+                        // 1. 플로우 타이머 초기화
+                        ref.read(flowTimerProvider.notifier).state =
+                            flowList[index];
+                        // 2. 플로우 타이머 스크린으로 이동
                         context.go('/flow');
                       },
                       child: const Text("시작하기"),
@@ -50,18 +52,16 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                     subtitle: Text(
-                        "집중: ${flowList[index].focusTime.inMinutes}분  휴식: ${flowList[index].restTime.inMinutes}분"),
+                        "몰입: ${flowList[index].focusTime.inMinutes}분  휴식: ${flowList[index].restTime.inMinutes}분"),
                   );
                 },
               ),
             ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  context.push("/flow_register");
-                },
-                child: const Text('새 플로우 등록하기'),
-              ),
+            ElevatedButton(
+              onPressed: () {
+                context.push("/flow_register");
+              },
+              child: const Text('새 플로우 등록하기'),
             ),
             const SizedBox(
               height: 20,

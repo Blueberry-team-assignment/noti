@@ -10,10 +10,11 @@ class MyPageScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userStateNotifier = ref.watch(userNotifierProvider.notifier);
-    final flowHistoriesState = ref.watch(flowHistoryProvider);
+    final userStateNotifier = ref.watch(userStateProvider.notifier);
+    final flowHistoryState = ref.watch(flowHistoryProvider);
 
-    ref.listen(userNotifierProvider, (prev, next) {
+    // 로그아웃 요청이 성공하여 user의 정보가 null이 되면, 로그인 화면으로 이동시킵니다.
+    ref.listen(userStateProvider, (prev, next) {
       if (next.user == null) {
         context.go("/log_in");
       }
@@ -30,7 +31,7 @@ class MyPageScreen extends ConsumerWidget {
         const SizedBox(
           height: 4,
         ),
-        flowHistoriesState.when(
+        flowHistoryState.when(
           data: (flowHistories) {
             if (flowHistories.isEmpty) {
               return const Expanded(

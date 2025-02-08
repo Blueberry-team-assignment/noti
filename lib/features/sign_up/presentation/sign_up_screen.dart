@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noti_flutter/features/sign_up/presentation/providers/sign_up_provider.dart';
+import 'package:noti_flutter/dto/sign_up_dto.dart';
+import 'package:noti_flutter/features/sign_up/domain/sign_up_service.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -15,6 +16,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -26,9 +28,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final signUpNotifier = ref.read(signUpNotifierProvider.notifier);
-    final signUpState = ref.watch(signUpNotifierProvider);
-
     return Form(
       key: formKey,
       child: Column(
@@ -96,6 +95,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
+              isLoading = true;
               try {
                 if (formKey.currentState!.validate()) {
                   if (context.mounted) {
@@ -105,20 +105,29 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     );
                   }
 
-                  await signUpNotifier.signUp(
-                      name: _nameController.text,
-                      email: _emailController.text,
-                      password: _passwordController.text);
+                  // signUpService를 호출하는 것 외에 복잡한 상태관리가 필요없기 때문에
+                  // 별도의 provider를 만들지 않고 signUpService를 직접 호출합니다.
+                  await ref.watch(signUpServiceProvider).signUpAndSave(
+                        signUpDto: SignUpDto(
+                          isAuthUser: true,
+                          name: _nameController.text,
+                          password: _passwordController.text,
+                          email: _emailController.text,
+                        ),
+                      );
 
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
+                        duration: Duration(seconds: 1),
                         content: Text('회원가입이 완료되었습니다.'),
                         backgroundColor: Colors.green,
                       ),
                     );
                   }
+
+                  // 부드러운 화면전환을 위해 딜레이 설정.
                   Future.delayed(const Duration(milliseconds: 1000), () {
                     if (context.mounted) {
                       context.go("/log_in");
@@ -143,11 +152,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ),
                   );
                 }
+              } finally {
+                isLoading = false;
               }
             },
-            child: signUpState.isLoading
+            child: isLoading
                 ? const CircularProgressIndicator()
-                : const Text('Submit'),
+                : const Text('회원가입'),
           ),
           ElevatedButton(
             onPressed: () {

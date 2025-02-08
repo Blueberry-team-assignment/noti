@@ -9,7 +9,7 @@ class FlowModel with _$FlowModel {
     required String id,
     required String name,
     String? category,
-    Duration? duration, // 1 플로우의 총 시간
+    Duration? duration, // 집중시간 + 휴식시간의 합계
     required Duration focusTime,
     required Duration restTime,
     @Default("") String desc,
