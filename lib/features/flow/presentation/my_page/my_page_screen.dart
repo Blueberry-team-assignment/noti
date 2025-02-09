@@ -131,27 +131,26 @@ class MyPageScreen extends ConsumerWidget {
         ),
         Center(
           child: TextButton(
-              onPressed: () async {
-                try {
-                  await userStateNotifier.logout();
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("로그아웃에 실패했습니다 ${e.toString()}"),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
+            onPressed: () async {
+              try {
+                await userStateNotifier.logout();
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("로그아웃에 실패했습니다 ${e.toString()}"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
                 }
-              },
-              child: Text(
-                "로그아웃",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall!
-                    .copyWith(fontSize: 14),
-              )),
+              }
+            },
+            child: Text(
+              "로그아웃",
+              style:
+                  Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 14),
+            ),
+          ),
         ),
       ],
     );

@@ -94,6 +94,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             },
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size.fromHeight(50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+            ),
             onPressed: () async {
               isLoading = true;
               try {
@@ -158,13 +165,26 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             },
             child: isLoading
                 ? const CircularProgressIndicator()
-                : const Text('회원가입'),
+                : Text(
+                    '회원가입',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onInverseSurface,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
           ),
-          ElevatedButton(
+          TextButton(
             onPressed: () {
               context.pushReplacement('/log_in');
             },
-            child: const Text("돌아가기"),
+            child: Text(
+              "돌아가기",
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+            ),
           )
         ],
       ),
