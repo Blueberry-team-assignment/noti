@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noti_flutter/data/local_storage/guest_repository.dart';
 import 'package:noti_flutter/features/log_in/presentation/providers/user_provider.dart';
-import 'package:noti_flutter/services/local_notification.dart';
-import 'package:noti_flutter/common/utils/talker.dart';
 
 class LogInScreen extends ConsumerStatefulWidget {
   const LogInScreen({super.key});
