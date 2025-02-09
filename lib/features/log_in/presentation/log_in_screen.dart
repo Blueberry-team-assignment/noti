@@ -33,6 +33,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
     });
 
     return Column(
+      spacing: 20,
       children: [
         Form(
           key: formKey,
@@ -54,7 +55,16 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                 ),
                 controller: _passwordController,
               ),
+              // const SizedBox(
+              //   height: 5,
+              // ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.primary),
                 onPressed: () async {
                   try {
                     if (formKey.currentState!.validate()) {
@@ -94,8 +104,21 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                   }
                 },
                 child: userState.isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('LogIn'),
+                    ? Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: CircularProgressIndicator(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                      )
+                    : Text(
+                        '로그인',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
               ),
             ],
           ),
@@ -103,48 +126,30 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(
+            TextButton(
               onPressed: () {
                 userStateNotifier.startGuestUser();
               },
-              child: const Text("비회원으로 시작하기"),
+              child: Text(
+                "비회원으로 시작하기",
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontSize: 14,
+                    ),
+              ),
             ),
-            ElevatedButton(
+            TextButton(
               onPressed: () {
                 context.go('/sign_up');
               },
-              child: const Text("회원가입"),
+              child: Text(
+                "회원가입",
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+              ),
             ),
           ],
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            final uid = await guestRepository.getUid();
-            talkerLog("test screen", "guest uid : ${uid.toString()}");
-          },
-          child: const Text("uid 프린트해보기"),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            NotificationDetails details = const NotificationDetails(
-              iOS: DarwinNotificationDetails(
-                presentAlert: true,
-                presentBadge: true,
-                presentSound: true,
-              ),
-              android: AndroidNotificationDetails(
-                "99",
-                "test",
-                importance: Importance.max,
-                priority: Priority.high,
-              ),
-            );
-
-            ref
-                .watch(localNotificationProvider)
-                .show(99, "title", "body", details);
-          },
-          child: const Text("알림 발송하기"),
         ),
       ],
     );
