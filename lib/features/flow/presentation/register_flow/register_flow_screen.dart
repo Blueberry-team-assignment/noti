@@ -110,6 +110,13 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
             },
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size.fromHeight(50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+            ),
             onPressed: () async {
               isLoading = true;
               try {
@@ -183,7 +190,14 @@ class _RegisterFlowScreenState extends ConsumerState<RegisterFlowScreen> {
             },
             child: isLoading
                 ? const CircularProgressIndicator()
-                : const Text('등록하기'),
+                : Text(
+                    '등록하기',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onInverseSurface,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
           ),
         ],
       ),
