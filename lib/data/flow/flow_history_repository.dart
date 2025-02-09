@@ -40,7 +40,8 @@ class FlowHistoryRepositoryImpl implements FlowHistoryRepository {
       final flowHistoriesRef = _firebaseFirestore
           .collection('users')
           .doc(uid)
-          .collection('flow_histories');
+          .collection('flow_histories')
+          .orderBy('date', descending: true);
 
       final flowHistories = await flowHistoriesRef.get();
       if (flowHistories.docs.isEmpty) {
