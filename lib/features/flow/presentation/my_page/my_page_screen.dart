@@ -100,12 +100,16 @@ class MyPageScreen extends ConsumerWidget {
                               ],
                             ),
                           ),
-                          const Expanded(
+                          Expanded(
                             flex: 1,
                             child: Center(
                               child: Icon(
-                                Icons.check_circle_outline,
-                                color: Colors.green,
+                                flowHistory.round > 0
+                                    ? Icons.check_circle_outline
+                                    : Icons.remove_circle_outline,
+                                color: flowHistory.round > 0
+                                    ? Colors.green
+                                    : Colors.grey,
                                 size: 16,
                               ),
                             ),
